@@ -1,0 +1,159 @@
+---------------------------------------------------------Part1----------------------------------------------------------------------
+//Database creation
+CREATE DATABASE practice_task_2;
+
+//Tables creation
+CREATE TABLE City(
+Name VARCHAR(40),
+Population INT,
+Area INT,
+Country VARCHAR(40),
+PRIMARY KEY(Name)
+);
+
+CREATE TABLE Country(
+Name VARCHAR(40),
+Population INT,
+Area INT,
+Capital VARCHAR(40),
+PRIMARY KEY(Name)
+);
+
+//Filling tables
+INSERT INTO City VALUES('Shanghai', 24150000, 6340, 'China');
+INSERT INTO City VALUES('Alexandria', 3917084, 2679, 'Egypt');
+INSERT INTO City VALUES('Suzhou', 6297, 8488, 'China');
+INSERT INTO City VALUES('Hyderabad', 3637483, 650, 'India');
+INSERT INTO City VALUES('Guangzhou', 10000000, 7434, 'China');
+INSERT INTO City VALUES('Pyongyang', 2581076, 1100, 'North Korea');
+INSERT INTO City VALUES('Chennai', 4590267, 181, 'India');
+INSERT INTO City VALUES('New York', 19795791, 1214, 'United States');
+INSERT INTO City VALUES('Bangkok', 5674843, 1568, 'Thailand');
+INSERT INTO City VALUES('Lagos', 13123000, 999, 'Nigeria');
+INSERT INTO City VALUES('London', 8538689, 1706, 'United Kingdom');
+INSERT INTO City VALUES('Lahore', 7129629, 1172, 'Pakistan');
+INSERT INTO City VALUES('Rio de Janeiro', 6453682, 1265, 'Brazil');
+INSERT INTO City VALUES('Brazilia', 2609997, 5801, 'Brazil');
+INSERT INTO City VALUES('Islamabad', 1082262, 851, 'Pakistan');
+INSERT INTO City VALUES('Abuja', 778567, 609, 'Nigeria');
+INSERT INTO City VALUES('Washington', 601723, 177, 'United States');
+INSERT INTO City VALUES('New Delhi', 295000, 42, 'India');
+INSERT INTO City VALUES('Cairo', 8026454, 528, 'Egypt');
+INSERT INTO City VALUES('Beijing', 21705000, 16801, 'China');
+
+INSERT INTO Country VALUES('China', 1373541278, 9596960, 'Beijing');
+INSERT INTO Country VALUES('Egypt', 85294388, 1001450, 'Cairo');
+INSERT INTO Country VALUES('India', 1291594000, 3287263, 'New Delhi');
+INSERT INTO Country VALUES('North Korea', 24720407, 120540, 'Pyongyang');
+INSERT INTO Country VALUES('United States', 325607197, 9519431, 'Washington');
+INSERT INTO Country VALUES('Thailand', 70498494, 514000, 'Bangkok');
+INSERT INTO Country VALUES('Nigeria', 182201962, 923768, 'Abuja');
+INSERT INTO Country VALUES('United Kingdom', 63395574, 243809, 'London');
+INSERT INTO Country VALUES('Pakistan', 199085847, 803940, 'Islamabad');
+INSERT INTO Country VALUES('Brazil', 205823665, 8514877, 'Brazilia');
+
+//Tasks
+----------------------------------1------------------------------------------------
+SELECT City.Name, City.Population
+FROM City JOIN Country ON Country.Name=City.Country
+WHERE Country='China'
+----------------------------------1------------------------------------------------
+
+----------------------------------2------------------------------------------------
+SELECT Country.Name, SUM(City.Area)
+FROM City JOIN Country ON Country.Name=City.Country
+GROUP BY Country.Name
+----------------------------------2------------------------------------------------
+
+----------------------------------3------------------------------------------------
+ALTER TABLE Country ADD FOREIGN KEY (Capital) REFERENCES City(Name)
+----------------------------------3------------------------------------------------
+
+---------------------------------------------------------Part2----------------------------------------------------------------------
+//Tables creation
+CREATE TABLE Festival(
+Name VARCHAR(40),
+City VARCHAR(40),
+Places INT,
+Country VARCHAR(40),
+Organizer VARCHAR(40),
+PRIMARY KEY(Name)
+);
+
+CREATE TABLE FestivalOrganizer(
+Name VARCHAR(40),
+AccreditationCountry VARCHAR(40),
+PRIMARY KEY(Name, AccreditationCountry)
+);
+
+//Foreign keys creation
+ALTER TABLE FestivalOrganizer ADD FOREIGN KEY (AccreditationCountry) REFERENCES Country(Name)
+ALTER TABLE City ADD FOREIGN KEY (Country) REFERENCES Country(Name)
+ALTER TABLE Festival ADD FOREIGN KEY (Country) REFERENCES Country(Name)
+ALTER TABLE Festival ADD FOREIGN KEY (City) REFERENCES City(Name)
+ALTER TABLE Festival ADD FOREIGN KEY (Country, Organizer) REFERENCES FestivalOrganizer(AccreditationCountry, Name)
+ALTER TABLE Country ADD FOREIGN KEY (Name) REFERENCES FestivalOrganizer(AccreditationCountry)
+
+//Filling tables
+INSERT INTO FestivalOrganizer VALUES('18 Hours Ltd','Brazil');
+INSERT INTO FestivalOrganizer VALUES('AEG Live','Brazil');
+INSERT INTO FestivalOrganizer VALUES('AEG Live','China');
+INSERT INTO FestivalOrganizer VALUES('Aidan Liban','Egypt');
+INSERT INTO FestivalOrganizer VALUES('Alexis Barrett','India');
+INSERT INTO FestivalOrganizer VALUES('Alison Povey','Nigeria');
+INSERT INTO FestivalOrganizer VALUES('Alison Povey','North Korea');
+INSERT INTO FestivalOrganizer VALUES('AllenEvents','Pakistan');
+INSERT INTO FestivalOrganizer VALUES('Beach Music','Thailand');
+INSERT INTO FestivalOrganizer VALUES('Dug Up Music','United Kingdom');
+INSERT INTO FestivalOrganizer VALUES('DHP Group','United States');
+
+INSERT INTO Festival VALUES('Bestival','Abuja', 3456, 'Nigeria', 'Alison Povey');
+INSERT INTO Festival VALUES('Field Day','Alexandria', 2540, 'Egypt', 'Aidan Liban');
+INSERT INTO Festival VALUES('Glastonbury','Bangkok', 4877, 'Thailand', 'Beach Music');
+INSERT INTO Festival VALUES('Green Man','Beijing', 3624, 'China', 'AEG Live');
+INSERT INTO Festival VALUES('Latitude','Brazilia', 2596, 'Brazil', 'AEG Live');
+INSERT INTO Festival VALUES('Lovebox','Rio de Janeiro', 3328, 'Brazil', '18 Hours Ltd');
+INSERT INTO Festival VALUES('Reading Festival','Cairo', 2748, 'Egypt', 'Aidan Liban');
+INSERT INTO Festival VALUES('Secret Garden Party','Chennai', 2836, 'India', 'Alexis Barrett');
+INSERT INTO Festival VALUES('The Great Escape','Islamabad', 2312, 'Pakistan', 'AllenEvents');
+INSERT INTO Festival VALUES('Wilderness','London', 4641, 'United Kingdom', 'Dug Up Music');
+
+
+//Tasks
+----------------------------------1------------------------------------------------
+SELECT Festival.Name
+FROM Festival
+JOIN Country ON Festival.Country = Country.Name
+WHERE Country.Population = ( 
+SELECT MAX( Population ) 
+FROM Country )
+----------------------------------1------------------------------------------------
+
+----------------------------------2------------------------------------------------
+SELECT Festival.Name
+FROM Festival JOIN City ON Festival.City=City.Name
+WHERE City.Population>5000000
+----------------------------------2------------------------------------------------
+
+----------------------------------3------------------------------------------------
+CREATE VIEW GreatestFestivals AS
+SELECT Festival.Name, Festival.City, Festival.Country
+FROM Festival JOIN City ON Festival.City=City.Name
+WHERE Festival.City IN(
+SELECT City.Name
+FROM City
+WHERE City.Population IN(
+SELECT MAX(Population)
+FROM City
+GROUP BY City.Country))
+
+CREATE VIEW Average AS
+SELECT GreatestFestivals.Country, AVG(City.Population) AS Average
+FROM City JOIN GreatestFestivals ON City.Country=GreatestFestivals.Country
+GROUP BY GreatestFestivals.Country
+
+SELECT Average
+FROM Average
+ORDER BY Average DESC
+LIMIT 3
+----------------------------------3------------------------------------------------
