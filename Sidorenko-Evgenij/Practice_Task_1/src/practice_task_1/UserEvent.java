@@ -32,7 +32,7 @@ public class UserEvent {
                     name = n;
                     text = t;
                     date = new Date();
-                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy-H:mm:ss");
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
                     format.setTimeZone(TimeZone.getTimeZone(MainClass.users.get(i).timezone.getID()));
                     date = format.parse(d);
                     flag = true;
@@ -84,7 +84,7 @@ public class UserEvent {
                     name = n;
                     text = t;
                     Date date1 = new Date();
-                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy-H:mm:ss");
+                    SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
                     format.setTimeZone(TimeZone.getTimeZone(MainClass.users.get(i).timezone.getID()));
                     date1 = format.parse(df);
                     flag = true;
