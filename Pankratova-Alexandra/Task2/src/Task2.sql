@@ -129,6 +129,9 @@ FROM festival JOIN city ON festival.City=city.Name
 ORDER BY city.Population DESC
 LIMIT 3;
 
+# BigFestival
+SELECT * FROM BigFestival;
+
 # среднее население городов соотетствующих стран
 SELECT AVG(Population), city.Country
 FROM city JOIN BigFestival ON city.Country=BigFestival.Country
