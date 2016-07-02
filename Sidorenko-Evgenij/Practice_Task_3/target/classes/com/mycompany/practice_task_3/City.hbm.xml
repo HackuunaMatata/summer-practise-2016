@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 02.07.2016 16:48:00 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.practice_task_3.City" table="city" catalog="practice_task_2" optimistic-lock="version">
+        <composite-id name="id" class="com.mycompany.practice_task_3.CityId">
+            <key-property name="name" type="string">
+                <column name="Name" length="40" />
+            </key-property>
+            <key-property name="country" type="string">
+                <column name="Country" length="40" />
+            </key-property>
+        </composite-id>
+        <property name="population" type="java.lang.Integer">
+            <column name="Population" />
+        </property>
+        <property name="area" type="java.lang.Integer">
+            <column name="Area" />
+        </property>
+    </class>
+</hibernate-mapping>
