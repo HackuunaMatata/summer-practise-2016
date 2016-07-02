@@ -10,11 +10,10 @@ import java.util.SimpleTimeZone;
  */
 public class ScanningAction {
 
-    private static Scanner in;
     private static TaskReader taskReader = new TaskReader();
 
     public static void main(String[] args) {
-        in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
 
         while (true) {
             String action = in.nextLine();
