@@ -1,4 +1,4 @@
-package java;
+package com.java;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +13,7 @@ public class TaskReader {
     public User create(String name, SimpleTimeZone timeZone, boolean isActive) {
         User user = new User(name, timeZone, isActive);
         users.add(user);
+        System.out.println("User is created");
         return user;
     }
 
@@ -21,9 +22,11 @@ public class TaskReader {
             if (user.name.equals(name)) {
                 user.timezone = timeZone;
                 user.isActive = isActive;
+                System.out.println("User is changed");
                 return true;
             }
         }
+        System.out.println("User is not founded");
         return false;
     }
 
@@ -34,14 +37,19 @@ public class TaskReader {
                 person = user;
             }
         }
-        if (person == null) return false;
+        if (person == null) {
+            System.out.println("User is not founded");
+            return false;
+        }
 
         for (Event event : person.events) {
             if (event.text.equals(text)) {
+                System.out.println("Event with this text was created earlier");
                 return false;
             }
         }
         person.events.add(new Event(text, datetime));
+        System.out.println("Event is added");
         return true;
     }
 
@@ -52,14 +60,19 @@ public class TaskReader {
                 person = user;
             }
         }
-        if (person == null) return false;
+        if (person == null) {
+            System.out.println("User is not founded");
+            return false;
+        }
 
         for (Event event : person.events) {
             if (event.text.equals(text)) {
                 person.events.remove(event);
+                System.out.println("Event is removed");
                 return true;
             }
         }
+        System.out.println("Event is not founded");
         return false;
     }
 
@@ -70,13 +83,17 @@ public class TaskReader {
                 person = user;
             }
         }
-        if (person == null) return false;
+        if (person == null) {
+            System.out.println("User is not founded");
+            return false;
+        }
 
         for (Event event : person.events) {
             if (event.text.equals(text)) {
                 return addEvent(nameTo, text, event.datetime);
             }
         }
+        System.out.println("Event is not founded");
         return false;
     }
 
