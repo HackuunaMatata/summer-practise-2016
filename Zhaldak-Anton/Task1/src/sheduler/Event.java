@@ -12,8 +12,46 @@ public class Event {
     private String text; // Description text of event
     private Date date;   // Date event
 
-    public Event (String text, long date) {
+
+    /**
+     * DISC: Create object for event.
+     *
+     * @param text Event text
+     * @param date Event date
+     */
+    public Event (String text, Date date)
+    {
         this.text = (text != null) ? text : "null-text";
-        this.date = new Date(date);
+        if (date == null)
+        {
+            System.err.println("Date is null. Set current date.");
+            this.date = new Date();
+        }
+        else
+        {
+            this.date = date;
+        }
+    }
+
+
+    /**
+     * DISC: return event date
+     *
+     * @return Date of event
+     */
+    public Date getDate ()
+    {
+        return date;
+    }
+
+
+    /**
+     * DISC: return event text
+     *
+     * @return Text of event
+     */
+    public String getText()
+    {
+        return text;
     }
 }

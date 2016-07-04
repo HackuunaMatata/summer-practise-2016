@@ -1,12 +1,12 @@
 package sheduler;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.regex.Matcher;
@@ -38,7 +38,9 @@ public class CommandController implements Runnable {
         controllerThread.start();
     }
 
-    // DESC: control CommandController life, listen stdin and call need functions.
+    /**
+     * DESC: control CommandController life, listen stdin and call need functions.
+     */
     public void run()
     {
         int exitCode = -1; // for save exit code.
@@ -51,22 +53,21 @@ public class CommandController implements Runnable {
         try {
             // Infinite cycle for input text commands (listen stdin)
             while (true) {
-                System.out.print("$: ");
+                System.out.print("$: "); // !!!!!
 
-                inputString = input.readLine();
-                sCommand = this.getCommand(inputString);
+                inputString = input.readLine();           // read input string
+                sCommand = this.getCommand(inputString);  // get command name
+                args = getArgs(inputString);              // get arguments
 
                 switch (sCommand) {
                     case "Create":
-                        args = getArgs(inputString);  // get arguments
-                        cCreate(args);                // call Create (name, timezone, state)
+                        cCreate(args);        // call Create (name, timezone, state)
                         break;
                     case "Modify":
-                        args = getArgs(inputString);  // get arguments
-                        cModify(args);                // call Modify (name, timezone, state)
+                        cModify(args);        // call Modify (name, timezone, state)
                         break;
                     case "AddEvent":
-
+                        cAddEvent(args);      // call AddEvent (name, text, datetime)
                         break;
                     case "RemoveEvent":
 
@@ -78,8 +79,7 @@ public class CommandController implements Runnable {
 
                         break;
                     case "ShowInfo":
-                        args = getArgs(inputString);  // get arguments
-                        cShowInfo(args);              // call ShowInfo (name)
+                        cShowInfo(args);      // call ShowInfo (name)
                         break;
                     case "StartScheduling":
 
@@ -92,24 +92,7 @@ public class CommandController implements Runnable {
                         break;
 
                     case "test":
-                        String strDate = "19.11.1995-18:22:21";
-                        int timezone = -10;
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
-                        Date dateParse = new Date();
-                        try {
-                            dateParse = sdf.parse(strDate);
-                            dateParse = new Date(dateParse.getTime() + (timezone * 1000 * 60 * 60)); //
 
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        Formatter formatter = new Formatter();
-
-                        formatter.format("%tT", dateParse);
-                        System.out.println("Cur time: " + formatter);
-                        System.out.println(dateParse.getTime());
-                        formatter.close();
                         break;
 
                     default:
@@ -131,31 +114,45 @@ public class CommandController implements Runnable {
         System.exit(exitCode);
     }
 
-
-    // DESC: add user in user pool.
-    // CONSOLE: Create (name, timezone, state)
+    /**
+     * DESC: add user in user pool.<br>
+     * CONSOLE: <code>Create (name, timezone, state)</code>
+     *
+     * @param args Input arguments for function <code>Create</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - Wrong timezone<br>
+     *         4 - Wrong state<br>
+     *         5 - User with this name already exist<br>
+     */
     private int cCreate (String[] args)
     {
         // Check nums of input argument.
-        if ( args == null || args.length != 3 ) {
+        if ( args == null || args.length != 3 )
+        {
             System.err.println("Wrong nums of input argument. Enter Help for more info.");
             return 1;
         }
 
         // Check format user name
-        if ( !args[0].matches("\\w+") ) {
+        if ( !args[0].matches("\\w+") )
+        {
             System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
             return 2;
         }
 
         // Check format timezone
-        if ( !args[1].matches("[+-]?[0-9]+") ) {
+        if ( !args[1].matches("[+-]?[0-9]+") )
+        {
             System.err.println("Wrong timezone. Use - and numbers.");
             return 3;
         }
 
         // Check format user state
-        if ( !args[2].matches("active|passive") ) {
+        if ( !args[2].matches("active|passive") )
+        {
             System.err.println("Wrong state. Use 'active' or 'passive'.");
             return 4;
         }
@@ -164,57 +161,68 @@ public class CommandController implements Runnable {
         int userTimezone = Integer.parseInt(args[1]);   // Don't check that -12 < timezone < 12
         boolean userState = (args[2].equals("active"));
 
-        // Check existing user with userName name
-        boolean isNameExist = false;
-        // Find user and set flag isNameExist if user with this name already exist
-        synchronized (userPool) {
-            for (User user : userPool) {
-                if (user.getName().equals(userName)) {
-                    isNameExist = true;
-                    break;
-                }
-            }
-        }
-        if ( isNameExist ) {
+        // Find user and set flag isUserExist if user with this name already exist
+        User userFound = getUser(userName);
+        boolean isUserExist = (userFound != null);
+
+        if ( isUserExist )
+        {
             // Error: user with enter name already exist.
             System.err.println("User with this name already exist.");
             return 5;
         }
-        else {
-            // Add new user
-            synchronized (userPool) {
-                userPool.add(new User(userName, userTimezone, userState));
-            }
+
+        // Add new user
+        synchronized (userPool)
+        {
+            userPool.add(new User(userName, userTimezone, userState));
         }
+
+        System.out.println(">> Add new user " + userName);
 
         return 0;
     }
 
 
-    // DESC: modify user info.
-    // CONSOLE: Modify(name, timezone, active)
+    /**
+     * DESC: modify user info.<br>
+     * CONSOLE: <code>Modify (name, timezone, active)</code>
+     *
+     * @param args Input arguments for function <code>Create</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - Wrong timezone<br>
+     *         4 - Wrong state<br>
+     *         5 - User with this name not found<br>
+     */
     private int cModify (String[] args)
     {
         // Check nums of input argument.
-        if ( args == null || args.length != 3 ) {
+        if ( args == null || args.length != 3 )
+        {
             System.err.println("Wrong nums of input argument. Enter Help for more info.");
             return 1;
         }
 
         // Check format user name
-        if ( !args[0].matches("\\w+") ) {
+        if ( !args[0].matches("\\w+") )
+        {
             System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
             return 2;
         }
 
         // Check format timezone
-        if ( !args[1].matches("[+-]?[0-9]+") ) {
-            System.err.println("Wrong timezone. Use - and numbers.");
+        if ( !args[1].matches("[+-]?[0-9]+") )
+        {
+            System.err.println("Wrong timezone. Use '-' and numbers.");
             return 3;
         }
 
         // Check format user state
-        if ( !args[2].matches("active|passive") ) {
+        if ( !args[2].matches("active|passive") )
+        {
             System.err.println("Wrong state. Use 'active' or 'passive'.");
             return 4;
         }
@@ -223,99 +231,214 @@ public class CommandController implements Runnable {
         int userTimezone = Integer.parseInt(args[1]);
         boolean userState = (args[2].equals("active"));
 
-        // Check existing user with userName name
-        boolean isNameExist = false;
-        User userFound = null;
-        // Find user and set flag isNameExist if user with this name already exist
-        synchronized (userPool) {
-            for (User user : userPool) {
-                if (user.getName().equals(userName)) {
-                    isNameExist = true;
-                    userFound = user;
-                    break;
-                }
-            }
-        }
-        if ( !isNameExist ) {
+        // Find user and set flag isUserExist if user with this name already exist
+        User userFound = getUser(userName);
+        boolean isUserExist = (userFound != null);
+
+        if ( !isUserExist )
+        {
             // Error: user with enter name not found.
             System.err.println("User with this name not found.");
             return 5;
         }
-        else {
-            // Modify user information
-            synchronized (userFound) {
-                userFound.setTimezone(userTimezone);
-                userFound.setState(userState);
+
+        // Modify user information
+        synchronized (userFound)
+        {
+            int oldTimezone = userFound.getTimezone();
+
+            userFound.setTimezone(userTimezone);
+            userFound.setState(userState);
+
+            // Recalculate event date
+            if (oldTimezone != userTimezone)
+            {
+                int diffTimezone = userTimezone - oldTimezone;
+                long addMS = diffTimezone * 60 * 60 * 1000;
+                long dateMS = 0;
+                for (Event event : userFound.getEventPool())
+                {
+                    dateMS = event.getDate().getTime();
+                    event.getDate().setTime(dateMS + addMS);
+                }
             }
         }
+
+        System.out.println(">> Modify info for " + userName);
 
         return 0;
     }
 
 
-    // DESC: show user info.
-    // CONSOLE: ShowInfo(name)
+    /**
+     * DESC: show user info.<br>
+     * CONSOLE: <code>ShowInfo (name)</code>
+     *
+     * @param args Input arguments for function <code>Create</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - User with this name not found<br>
+     */
     private int cShowInfo (String[] args)
     {
         // Check nums of input argument.
-        if ( args == null || args.length != 1 ) {
+        if ( args == null || args.length != 1 )
+        {
             System.err.println("Wrong nums of input argument. Enter Help for more info.");
             return 1;
         }
 
         // Check format user name
-        if ( !args[0].matches("\\w+") ) {
+        if ( !args[0].matches("\\w+") )
+        {
             System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
             return 2;
         }
 
         String userName = args[0];
 
-        // Check existing user with userName name
-        boolean isNameExist = false;
-        User userFound = null;
-        // Find user and set flag isNameExist if user with this name already exist
-        synchronized (userPool) {
-            for (User user : userPool) {
-                if (user.getName().equals(userName)) {
-                    isNameExist = true;
-                    userFound = user;
-                    break;
-                }
-            }
-        }
-        if ( !isNameExist ) {
+        // Find user and set flag isUserExist if user with this name already exist
+        User userFound = getUser(userName);
+        boolean isUserExist = (userFound != null);
+
+        if ( !isUserExist )
+        {
             // Error: user with enter name not found.
             System.err.println("User with this name not found.");
             return 3;
         }
-        else {
-            // Modify user information
-            synchronized (userFound) {
-                // Print user name and timezone
-                System.out.print(userFound.getName() + " " + userFound.getTimezone() + " ");
-                // Print user state
-                if ( userFound.isState() )
-                    System.out.println("active");
-                else
-                    System.out.println("passive");
 
-                // Print user events
+        // Modify user information
+        synchronized (userFound)
+        {
+            // Print user name and timezone
+            System.out.print(userFound.getName() + " " + userFound.getTimezone() + " ");
+            // Print user state
+            if ( userFound.isState() )
+                System.out.println("active");
+            else
+                System.out.println("passive");
+
+            // Print user events
+            for (Event event : userFound.getEventPool())
+            {
+                Formatter formatter = new Formatter();
+                formatter.format("%1$td.%1$tm.%1$tY-%tT", event.getDate());
+                System.out.println(formatter + " " + event.getText());
+                formatter.close();
             }
         }
 
         return 0;
     }
 
-    // DESC: return name command from console input.
+
+    /**
+     * DESC: add event for user.<br>
+     * CONSOLE: <code>AddEvent (name, text, datetime)</code>
+     *
+     * @param args Input arguments for function <code>Create</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - Wrong date format<br>
+     *         4 - User with this name not found<br>
+     *         5 - Invalid date<br>
+     */
+    private int cAddEvent (String[] args)
+    {
+        // Check nums of input argument.
+        if ( args == null || args.length != 3 )
+        {
+            System.err.println("Wrong nums of input argument.");
+            System.err.println("Enter text into quotes. Date format DD.MM.YYYY-hh:mm:ss");
+            System.err.println("Enter Help for more info.");
+            return 1;
+        }
+
+        // Check format user name.
+        if ( !args[0].matches("\\w+") )
+        {
+            System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
+            return 2;
+        }
+
+        // Check date format.
+        // With this parser into getArgument method it's unreachable check because
+        //    if the date does not match the required format then nums of input argument
+        //    does not equals 3.
+        //    (parse is invalid sometimes because find words but "ignore" separators)
+        if ( !args[2].matches("\\d{2}\\.\\d{2}\\.\\d{4}\\-\\d{2}\\:\\d{2}:\\d{2}") )
+        {
+            System.err.println("Wrong date format. Date format DD.MM.YYYY-hh:mm:ss");
+            return 3;
+        }
+
+        String userName  = args[0];
+        String eventText = args[1];
+
+        // Find user and set flag isUserExist if user with this name already exist
+        User userFound = getUser(userName);
+        boolean isUserExist = (userFound != null);
+
+        if ( !isUserExist )
+        {
+            // Error: user with enter name not found.
+            System.err.println("User with this name not found.");
+            return 4;
+        }
+
+        // Check the validity of date and create date for user event.
+        String stringDate = args[2];
+        synchronized (userFound) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
+                sdf.setLenient(false); // for auto check validity of date
+
+                int userTimezone = userFound.getTimezone();           // get user timezone
+                int addMilliSeconds = userTimezone * 60 * 60 * 1000;  // convert hours to milliseconds
+                Date dateParse = sdf.parse(stringDate);               // parse input date
+                                                                      // if date is invalid then auto create exception
+                Date eventDate = new Date(dateParse.getTime() + addMilliSeconds);
+                userFound.addEvent(new Event(eventText, eventDate));
+            } catch (ParseException e) {
+                System.err.println("Invalid date.");
+                return 5;
+            }
+        }
+
+        System.out.println(">> Add new event for " + userName);
+
+        return 0;
+    }
+
+
+    /**
+     * DESC: return name command from console input.
+     *
+     * @param inputString Input string from console
+     *
+     * @return Name of command
+     */
     private String getCommand (String inputString)
     {
         String[] words = inputString.trim().split("[ \\t\\(]+");
         return words[0];
     }
 
-    // DESC: parse command arguments from console input. There are arguments into brackets () and
-    //       split ','(comma) ' '(space) and '\t'(tab). Symbols into quotes are one string.
+
+    /**
+     * DESC: parse command arguments from console input. There are arguments into <code>brackets '()'</code> and
+     * split <code>','(comma)</code>, <code>' '(space)</code> and <code>'\t'(tab)</code>. Symbols into
+     * quotes are one string.
+     *
+     * @param inputString Input string from console
+     *
+     * @return Array of strings
+     */
     private String[] getArgs(String inputString)
     {
         Matcher matcher = Pattern.compile("(?<=\\().*(?=\\))").matcher(inputString);
@@ -323,25 +446,52 @@ public class CommandController implements Runnable {
         if (!matcher.find()) return null;
 
         String stringInBrackets = inputString.substring(matcher.start(), matcher.end());
-//        System.out.println(stringInBrackets);
 
         String pattern = "(\\d{2}\\.\\d{2}\\.\\d{4}\\-\\d{2}\\:\\d{2}:\\d{2})|([-+\\w]+)|(['\"].*['\"])";
         matcher = Pattern.compile(pattern).matcher(stringInBrackets);
         ArrayList<String> arrayList = new ArrayList<>(0);
         String temp = "";
-        while (matcher.find()) {
+
+        while (matcher.find())
+        {
             temp = stringInBrackets.substring(matcher.start(), matcher.end());
             arrayList.add(temp);
         }
+
         String[] args = new String[arrayList.size()];
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
             args[i] = arrayList.get(i);
-//            System.out.println(args[i]);
-        }
+
         return args;
     }
 
-    // DESC: print help text in stdout.
+
+    /**
+     * DESC: return user object by user name.
+     *
+     * @param userName User name
+     *
+     * @return <code>null</code> - if user not found or<br>
+     *         <code>link</code> - on user object
+     */
+    private User getUser (String userName)
+    {
+        User userFound = null;
+        synchronized (userPool) {
+            for (User user : userPool) {
+                if (user.getName().equals(userName)) {
+                    userFound = user;
+                    break;
+                }
+            }
+        }
+        return userFound;
+    }
+
+
+    /**
+     * DESC: print help text in stdout.
+     */
     private static void Help()
     {
         System.out.println("Wrong command.\nAllowed commands:" +
@@ -358,3 +508,12 @@ public class CommandController implements Runnable {
     }
 
 }
+
+/*
+For test:
+Create (user1, -2, passive)
+Modify (user1, 0, active)
+AddEvent(user1,"Hello world", 19.11.1995-18:11:11)
+AddEvent(user1,"Hello world2", 19.11.1995-18:11:11)
+ShowInfo(user1)
+ */
