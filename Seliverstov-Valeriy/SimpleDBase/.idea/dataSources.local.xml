@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - practice_lab@localhost" uuid="1816e3d2-18b3-4d28-a9ff-296f5200f8d8">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>practice_lab.*</schema-pattern>
+      <default-schemas>practice_lab.*</default-schemas>
+    </data-source>
+  </component>
+</project>
