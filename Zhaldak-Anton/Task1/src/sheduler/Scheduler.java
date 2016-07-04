@@ -1,10 +1,10 @@
 package sheduler;
 
 /**
- * This class check events into event pool and display event
- *
+ * Class for control events. This class check event date
+ * every user and display event text if it's necessary.
  */
-public class Sheduler implements Runnable {
+public class Scheduler implements Runnable {
     @Override
     public void run() {
         try {
