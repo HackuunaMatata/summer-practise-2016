@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import com.utils.*;
 
 /**
  * Created by a1 on 28.06.16.
@@ -12,9 +13,9 @@ import java.util.Scanner;
 //Syntax of user's commands in CommandLine:
 //Create(name, timezone, active)
 //Modify(name, timezone, active)
-//AddEvent(name, text, datetime)
-//RemoveEvent(name, text)
-//CloneEvent(name, text, nameTo)
+//AddEvent(name, "text", datetime)
+//RemoveEvent(name, "text")
+//CloneEvent(name, "text", nameTo)
 //ShowInfo(name)
 //StartScheduling
 //exit
@@ -22,13 +23,14 @@ import java.util.Scanner;
 public class WorkwsUser {
 
     private String command;
+    private AppUtils appUtils;
 
     public WorkwsUser() {
-
+        appUtils = new AppUtils();
     }
 
     //while(true) with reading Lines and analysing command
-    void work(){
+    public void work(){
 
         String onlyCom = ""; //command without (...)
         Scanner scan = new Scanner(System.in);
@@ -38,24 +40,16 @@ public class WorkwsUser {
             command = scan.nextLine();
 
             try {
-                onlyCom = сomW_oBkt(command);
+                onlyCom = appUtils.сomW_oBkt(command);
                 process(onlyCom);
             } catch (IndexOutOfBoundsException e) {
                 onlyCom = command;
                 process(onlyCom);
             } catch(IllegalStateException ge) {
-                System.out.println("Keep up syntax right!");
+                appUtils.printError("Keep up syntax right!");
             }
 
         }
-    }
-
-    //separate word with parameters in (...)
-    String сomW_oBkt(String com) throws IllegalStateException,IndexOutOfBoundsException{
-        String temp = com.substring(0,com.indexOf("("));
-        if (com.contains("("))
-            if (!com.contains(")")) throw new IllegalStateException();
-        return temp;
     }
 
     //Switch with cases for every user's request
@@ -98,7 +92,7 @@ public class WorkwsUser {
                 System.exit(0);
                 break;
             default:
-                System.out.println("Unknown command!");
+                appUtils.printError("Unknown command!");
                 break;
         }
     }
@@ -111,54 +105,38 @@ public class WorkwsUser {
         String[] info = new String[3]; //number in [] depends on number of words in (...)
 
         try {
-            info = separateWords(data,3);
+            info = appUtils.separateWords(data,3);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int num = searchUsr(info[0]);
+        int num = User.searchUsr(info[0],Global.users);
 
         if (num != -1) {
-            System.out.println("User already exists!");
+            appUtils.printError("User already exists!");
             return;
         }
 
         User usr = null;
+
         try {
             usr = new User(info[0],info[1],info[2]);
         } catch (NumberFormatException e) {
-            System.out.println("Bad format of timezone! It's from -12 to 12.");
+            appUtils.printError("Bad format of timezone! It's from -12 to 12.");
             return;
         }
+
         Global.users.add(usr);
 
         System.out.println("Success! New user:\n"+
-                Global.users.get(Global.users.size()-1).name+"\n"+
-                Global.users.get(Global.users.size()-1).tzone+"\n"+
-                Global.users.get(Global.users.size()-1).stat);
+                Global.users.get(Global.users.size()-1).getName()+"\n"+
+                Global.users.get(Global.users.size()-1).getTzone()+"\n"+
+                Global.users.get(Global.users.size()-1).getStatus());
+
         Global.users.sort(new UsComparator());
+
         System.out.println("-------------------------");
-    }
-
-    //separate parameters in function
-    //Create(user,timezone,active)
-    //result of function String[] = {user,timezone,active}
-    //Parameters: String data - (user,timezone,active), num_of_w - number of words
-    private String[] separateWords(String data, int num_of_w) throws IndexOutOfBoundsException{
-
-        data.trim();
-
-        String[] res = new String[num_of_w];
-
-        for(int i = 0; i < num_of_w - 1; i++){
-            res[i] = data.substring(0,data.indexOf(","));
-            data = data.substring(data.indexOf(",")+1);
-        }
-
-        res[num_of_w - 1] = data;
-
-        return res;
     }
 
     //working like void create(String data) but just update user
@@ -169,31 +147,31 @@ public class WorkwsUser {
         String[] info = new String[3];//number in [] depends on number of words in (...)
 
         try {
-            info = separateWords(data,3);
+            info = appUtils.separateWords(data,3);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int num = searchUsr(info[0]);
+        int num = User.searchUsr(info[0],Global.users);
 
         if (num == -1) {
-            System.out.println("Unknown user!");
+            appUtils.printError("Unknown user!");
         }
         else {
             User usr = null;
             try {
                 usr = new User(info[0],info[1],info[2]);
             } catch (NumberFormatException e) {
-                System.out.println("Bad format of timezone! It's from -12 to 12");
+                appUtils.printError("Bad format of timezone! It's from -12 to 12");
                 return;
             }
             Global.users.set(num,usr);
 
             System.out.println("Success! user "+info[0]+" now:\n"+
-                    Global.users.get(num).name+"\n"+
-                    Global.users.get(num).tzone+"\n"+
-                    Global.users.get(num).stat);
+                    Global.users.get(num).getName()+"\n"+
+                    Global.users.get(num).getTzone()+"\n"+
+                    Global.users.get(num).getStatus());
             System.out.println("-------------------------");
         }
     }
@@ -205,40 +183,43 @@ public class WorkwsUser {
         String[] info = new String[3];//number in [] depends on number of words in (...)
 
         try {
-            info = separateWords(data,3);
+            info = appUtils.separateEventWords(data,3);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int num = searchUsr(info[0]);
+        int num = User.searchUsr(info[0],Global.users);
 
         if (num == -1) {
-            System.out.println("Unknown user!");
+            appUtils.printError("Unknown user!");
             return;
         }
 
-        if ((!Global.users.get(num).events.isEmpty()) && (!uniqEvent(info[1],num))) {
-            System.out.println("Not uniq EventText!");
+        if ((!Global.users.get(num).isEmptyEvents()) &&
+                (!Global.users.get(num).uniqEvent(info[1]))) {
+            appUtils.printError("Not uniq EventText!");
             return;
         }
 
         MyEvent mev = null;
 
         try {
-            mev = new MyEvent(info[1],info[2],Global.users.get(num).tzone - Global.genTZ);
+            mev = new MyEvent(info[1],info[2],Global.users.get(num).getTzone() - Global.genTZ);
         } catch (ParseException e) {
-            System.out.println("Bad format of data!");
+            appUtils.printError("Bad format of data!");
             return;
         }
 
-        Global.users.get(num).events.add(mev);
-        int currentEv = Global.users.get(num).events.size()-1;
+        Global.users.get(num).addEvent(mev);
+        int currentEv = Global.users.get(num).sizeEvents()-1;
 
-        System.out.println("Success! New event for "+Global.users.get(num).name+":\n"+
-                Global.users.get(num).events.get(currentEv).info+"\n"+
-                Global.users.get(num).events.get(currentEv).dat.toString());
-        Global.users.get(num).events.sort(new EvComparator());
+        System.out.println("Success! New event for "+Global.users.get(num).getName()+":\n"+
+                Global.users.get(num).getEvent(currentEv).getInfo()+"\n"+
+                Global.users.get(num).getEvent(currentEv).getDate().toString());
+
+        Global.users.get(num).sortEvents();
+
         System.out.println("-------------------------");
     }
 
@@ -249,45 +230,48 @@ public class WorkwsUser {
         String[] info = new String[4];
 
         try {
-            info = separateWords(data,4);
+            info = appUtils.separateEventWords(data,4);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int num = searchUsr(info[0]);
+        int num = User.searchUsr(info[0],Global.users);
 
         if (num == -1) {
-            System.out.println("Unknown user!");
+            appUtils.printError("Unknown user!");
             return;
         }
 
-        if ((!Global.users.get(num).events.isEmpty()) && (!uniqEvent(info[1],num))) {
-            System.out.println("Not uniq EventText!");
+        if ((!Global.users.get(num).isEmptyEvents()) &&
+                (!Global.users.get(num).uniqEvent(info[1]))) {
+            appUtils.printError("Not uniq EventText!");
             return;
         }
 
         MyEvent mev = null;
 
         try {
-            long time = getRandDate(info[2],info[3],Global.users.get(num).tzone - Global.genTZ);
+            long time = appUtils.getRandDate(info[2],info[3],Global.users.get(num).getTzone() - Global.genTZ);
             if (time == -1) {
-                System.out.println("Replace dates!");
+                appUtils.printError("Replace dates!");
                 return;
             }
             mev = new MyEvent(info[1],time);
         } catch (ParseException e) {
-            System.out.println("Bad format of data!");
+            appUtils.printError("Bad format of data!");
             return;
         }
 
-        Global.users.get(num).events.add(mev);
-        int currentEv = Global.users.get(num).events.size()-1;
+        Global.users.get(num).addEvent(mev);
+        int currentEv = Global.users.get(num).sizeEvents()-1;
 
-        System.out.println("Success! New event for "+Global.users.get(num).name+":\n"+
-                Global.users.get(num).events.get(currentEv).info+"\n"+
-                Global.users.get(num).events.get(currentEv).dat.toString());
-        Global.users.get(num).events.sort(new EvComparator());
+        System.out.println("Success! New event for "+Global.users.get(num).getName()+":\n"+
+                Global.users.get(num).getEvent(currentEv).getInfo()+"\n"+
+                Global.users.get(num).getEvent(currentEv).getDate().toString());
+
+        Global.users.get(num).sortEvents();
+
         System.out.println("-------------------------");
     }
 
@@ -298,55 +282,31 @@ public class WorkwsUser {
         String[] info = new String[2];
 
         try {
-            info = separateWords(data,2);
+            info = appUtils.separateEventWords(data,2);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int numU = searchUsr(info[0]);
+        int numU = User.searchUsr(info[0],Global.users);
 
         if (numU == -1) {
-            System.out.println("Unknown user!");
+            appUtils.printError("Unknown user!");
             return;
         }
 
-        int numE = searchEv(info[1],numU);
+        int numE = Global.users.get(numU).searchEv(info[1]);
 
         if (numE == -1) {
-            System.out.println("Unknown event!");
+            appUtils.printError("Unknown event!");
             return;
         }
 
-        Global.users.get(numU).events.remove(numE);
+        Global.users.get(numU).removeEvent(numE);
+
         System.out.println("Event removed!");
+
         System.out.println("-------------------------");
-    }
-
-    //check text of event for uniqueness
-    boolean uniqEvent(String text,int numU){
-        int num_of_ev = -1;
-
-        int i = 0;
-        try {
-            while(!Global.users.get(numU).events.get(i++).info.equals(text));
-            num_of_ev = i;
-        } catch (IndexOutOfBoundsException e) {}
-
-        return num_of_ev == -1;
-    }
-
-    //search event for user with number numU in ArrayList<User>
-    int searchEv(String text,int numU){
-        int num_of_ev = -1;
-
-        int i = 0;
-        try {
-            while(!Global.users.get(numU).events.get(i++).info.equals(text));
-            num_of_ev = i-1;
-        } catch (IndexOutOfBoundsException e) {}
-
-        return num_of_ev;
     }
 
     //clone event
@@ -356,40 +316,45 @@ public class WorkwsUser {
         String[] info = new String[3];
 
         try {
-            info = separateWords(data,3);
+            info = appUtils.separateEventWords(data,3);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int numUfrom = searchUsr(info[0]); // number of user-source
+        int numUfrom = User.searchUsr(info[0],Global.users); // number of user-source
 
         if (numUfrom == -1) {
-            System.out.println("Unknown user from!");
+            appUtils.printError("Unknown user from!");
             return;
         }
 
-        int numE = searchEv(info[1],numUfrom);
+        int numE = Global.users.get(numUfrom).searchEv(info[1]);
 
         if (numE == -1) {
-            System.out.println("Unknown event!");
+            appUtils.printError("Unknown event!");
             return;
         }
 
-        int numUto = searchUsr(info[2]); // number of user-destination
+        int numUto = User.searchUsr(info[2],Global.users);; // number of user-destination
 
         if (numUto == -1) {
-            System.out.println("Unknown user to!");
+            appUtils.printError("Unknown user to!");
             return;
         }
 
-        Global.users.get(numUto).events.add(Global.users.get(numUfrom).events.get(numE));
-        int currentEv = Global.users.get(numUto).events.size()-1;
+        Global.users.get(numUto).addEvent(
+                Global.users.get(numUfrom).getEvent(numE)
+        );
 
-        System.out.println("Success! New event for "+Global.users.get(numUto).name+":\n"+
-                Global.users.get(numUto).events.get(currentEv).info+"\n"+
-                Global.users.get(numUto).events.get(currentEv).dat.toString());
-        Global.users.get(numUto).events.sort(new EvComparator());
+        int currentEv = Global.users.get(numUto).sizeEvents()-1;
+
+        System.out.println("Success! New event for "+Global.users.get(numUto).getName()+":\n"+
+                Global.users.get(numUto).getEvent(currentEv).getInfo()+"\n"+
+                Global.users.get(numUto).getEvent(currentEv).getDate().toString());
+
+        Global.users.get(numUto).sortEvents();
+
         System.out.println("-------------------------");
     }
 
@@ -400,58 +365,23 @@ public class WorkwsUser {
         String[] info = new String[1];
 
         try {
-            info = separateWords(data,1);
+            info = appUtils.separateWords(data,1);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Keep up syntax right!");
+            appUtils.printError("Keep up syntax right!");
             return;
         }
 
-        int num = searchUsr(info[0]);
+        int num = User.searchUsr(info[0],Global.users);
 
         if (num == -1) {
-            System.out.println("Unknown user!");
+            appUtils.printError("Unknown user!");
             return;
         }
-        System.out.println("User:\n"+
-                Global.users.get(num).name+"\n"+
-                Global.users.get(num).tzone+"\n"+
-                Global.users.get(num).stat);
-        printEvents(num);
 
-    }
+        Global.users.get(num).printInfo();
 
-    //print all events for user num
-    void printEvents(int num){
-        for(int i = 0; i < Global.users.get(num).events.size(); i++){
-            System.out.println("Event "+i+":\n"+
-                    Global.users.get(num).events.get(i).info+"\n"+
-                    Global.users.get(num).events.get(i).dat.toString());
-        }
-    }
+        Global.users.get(num).printEvents();
 
-    //generate random date from dSt to dEnd and in system timezone
-    long getRandDate(String dSt,String dEnd,int ttzone) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
-        Date d1 = format.parse(dSt);
-        Date d2 = format.parse(dEnd);
-        long diff = d2.getTime()-d1.getTime();
-        if (diff < 0) return -1;
-        long randDml = Math.round(Math.random()*(d2.getTime()-d1.getTime())+d1.getTime()+ttzone*3600000);
-        return randDml;
-    }
-
-    //search user with name in ArrayList<User>
-    int searchUsr(String name){
-        int num_of_usr = -1;
-
-        int i = 0;
-        try {
-            while(!Global.users.get(i++).name.equals(name));
-            num_of_usr = i-1;
-        } catch (IndexOutOfBoundsException e) {
-        }
-
-        return num_of_usr;
     }
 
 }

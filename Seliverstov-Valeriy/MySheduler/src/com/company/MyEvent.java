@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class MyEvent{
 
-    Date dat;
-    String info;
+    private Date dat;
+    private String info;
 
     //constructor for date in String
     public MyEvent(String iinfo,String ddat,int tzone) throws ParseException {
@@ -26,6 +26,22 @@ public class MyEvent{
 
         dat = new Date(ddat);
 
+        info = iinfo;
+    }
+
+    public Date getDate(){
+        return dat;
+    }
+
+    public void setDate(Date date){
+        dat = date;
+    }
+
+    public String getInfo(){
+        return this.info;
+    }
+
+    public void setInfo(String iinfo){
         info = iinfo;
     }
 

@@ -11,8 +11,8 @@ public class UsComparator implements Comparator {
 
     @Override
     public int compare(Object o1, Object o2) {
-        if (((User) o1).name.compareTo(((User) o2).name) < 0) return 1;
-        if (((User) o1).name.compareTo(((User) o2).name) > 0) return 1;
+        if (((User) o1).getName().compareTo(((User) o2).getName()) < 0) return 1;
+        if (((User) o1).getName().compareTo(((User) o2).getName()) > 0) return 1;
         return 0;
     }
 }

@@ -1,0 +1,7 @@
+ejb\NewMessage.class
+ejb\NewsEntity.class
+ejb\NewsEntityFacade.class
+ejb\AbstractFacade.class
+com\mycompany\NewSessionBean.class
+ejb\NewsEntityFacadeLocal.class
+ejb\NewsEntity_.class

@@ -1,6 +1,8 @@
-package com.company;
+package com.main;
 
-public class Main {
+import com.company.*;
+
+public class AppMain {
 
     public static void main(String[] args) {
         // write your code here
