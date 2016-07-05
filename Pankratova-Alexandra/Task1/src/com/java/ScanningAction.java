@@ -67,6 +67,7 @@ public class ScanningAction {
 
                 try {
                     //System.out.println(format.parse(datetime));
+                    //System.out.println((format.parse(datetime)).getTime());
                     taskReader.addEvent(name, text, format.parse(datetime));
                 } catch (ParseException e) {
                     throw new StringIndexOutOfBoundsException();
@@ -108,6 +109,15 @@ public class ScanningAction {
                 String nameTo = action.substring(0, action.indexOf(")"));
 
                 taskReader.cloneEvent(name, text, nameTo);
+                break;
+            case "ShowInfo":
+                name = action.substring(action.indexOf("(")+1, action.indexOf(")"));
+                taskReader.showInfo(name);
+                break;
+            case "Start":
+                System.out.println(111);
+                Thread thread = new Thread(new TaskWriter());
+                thread.start();
                 break;
         }
     }

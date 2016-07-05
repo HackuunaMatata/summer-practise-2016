@@ -30,7 +30,7 @@ public class TaskReader {
         return false;
     }
 
-    public boolean addEvent(String name, String text, Date datetime) {
+    public Event addEvent(String name, String text, Date datetime) {
         User person = null;
         for (User user : users) {
             if (user.name.equals(name)) {
@@ -39,18 +39,20 @@ public class TaskReader {
         }
         if (person == null) {
             System.out.println("User is not founded");
-            return false;
+            return null;
         }
 
         for (Event event : person.events) {
             if (event.text.equals(text)) {
                 System.out.println("Event with this text was created earlier");
-                return false;
+                return null;
             }
         }
-        person.events.add(new Event(text, datetime));
+        Event event = new Event(text, datetime);
+        person.addEventToList(event);
+        TaskWriter.addEventToCalendar(person, event);
         System.out.println("Event is added");
-        return true;
+        return event;
     }
 
     public boolean removeEvent(String name, String text) {
@@ -90,7 +92,7 @@ public class TaskReader {
 
         for (Event event : person.events) {
             if (event.text.equals(text)) {
-                return addEvent(nameTo, text, event.datetime);
+                return addEvent(nameTo, text, event.datetime) != null;
             }
         }
         System.out.println("Event is not founded");
@@ -99,6 +101,17 @@ public class TaskReader {
 
     public boolean addRandomTimeEvent(String name, String text, Date dateFrom, Date dateTo) {
         return addEvent(name, text,
-                new Date((long) (dateFrom.getTime() + Math.random() * (dateTo.getTime() - dateFrom.getTime()))));
+                new Date((long) (dateFrom.getTime() + Math.random() * (dateTo.getTime() - dateFrom.getTime())))) != null;
     }
+
+    public void showInfo(String name) {
+        for (User user : users) {
+            if (user.name.equals(name)) {
+                System.out.println(user);
+                return;
+            }
+        }
+        System.out.println("User is not founded");
+    }
+
 }
