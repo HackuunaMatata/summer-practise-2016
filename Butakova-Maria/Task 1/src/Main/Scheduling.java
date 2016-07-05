@@ -29,6 +29,7 @@ public class Scheduling extends Thread{
             }
             try {
                 Thread.sleep(500);
+                this.interrupt();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

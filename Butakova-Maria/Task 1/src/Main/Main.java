@@ -15,11 +15,11 @@ public class Main {
     public static void main(String[] args) throws ParseException {
 
         
-       /* users.add(new User());
+        /*users.add(new User());
         users.get(0).Create("a", "4", "active");
         users.add(new User());
         users.get(1).Create("b", "0", "active");
-        users.get(0).AddEvent("b", "hello", "5.07.2016-21:52:00");
+        users.get(0).AddEvent("b", "hello", "5.07.2016-23:33:00");
         users.get(0).AddEvent("b", "hello2", "11.04.2012-12:12:00");
         users.get(0).ShowInfo("b");
         users.get(0).AddEvent("b", "hello122", "12.04.2012-7:12:00");
@@ -37,7 +37,7 @@ public class Main {
         }
     }
     
-    public static void redaction() throws ParseException
+    public static void redaction() throws ParseException 
     {
         String command;
         int size_us;
@@ -118,9 +118,10 @@ public class Main {
               break;
               
              case "StartScheduling":
-                Scheduling sh = new Scheduling();
-                sh.run();
+                Thread t = new Thread(new Scheduling());
+                 t.start();     
             break;
+            
              default:
                  System.out.println("Команда некорректна.");
                  break;
