@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class Event {
     private String text; // Description text of event
-    private Date date;   // Date event
+    private Date date;   // Date event (for server)
 
 
     /**
@@ -35,7 +35,7 @@ public class Event {
 
 
     /**
-     * DISC: return event date
+     * DISC: return event date.
      *
      * @return Date of event
      */
@@ -46,12 +46,23 @@ public class Event {
 
 
     /**
-     * DISC: return event text
+     * DISC: return event text.
      *
      * @return Text of event
      */
     public String getText()
     {
         return text;
+    }
+
+
+    /**
+     * DISC: return clone for current event.
+     *
+     * @return Clone for current event
+     */
+    public Event clone()
+    {
+        return new Event(this.text, this.date);
     }
 }

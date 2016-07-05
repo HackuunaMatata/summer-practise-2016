@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Formatter;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,13 +68,13 @@ public class CommandController implements Runnable {
                         cAddEvent(args);      // call AddEvent (name, text, datetime)
                         break;
                     case "RemoveEvent":
-
+                        cRemoveEvent(args);   // call RemoveEvent (name, text)
                         break;
                     case "AddRandomTimeEvent":
-
+                        cAddRandomTimeEvent(args); // call AddRandomTimeEvent(name, text, dateFrom, dateTo)
                         break;
                     case "CloneEvent":
-
+                        cCloneEvent(args);    // call CloneEvent(name, text, nameTo)
                         break;
                     case "ShowInfo":
                         cShowInfo(args);      // call ShowInfo (name)
@@ -188,7 +186,7 @@ public class CommandController implements Runnable {
      * DESC: modify user info.<br>
      * CONSOLE: <code>Modify (name, timezone, active)</code>
      *
-     * @param args Input arguments for function <code>Create</code>
+     * @param args Input arguments for function <code>Modify</code>
      *
      * @return 0 - successful <br>
      *         1 - Wrong numbers of input argument<br>
@@ -253,7 +251,7 @@ public class CommandController implements Runnable {
             // Recalculate event date
             if (oldTimezone != userTimezone)
             {
-                int diffTimezone = userTimezone - oldTimezone;
+                int diffTimezone = oldTimezone - userTimezone;
                 long addMS = diffTimezone * 60 * 60 * 1000;
                 long dateMS = 0;
                 for (Event event : userFound.getEventPool())
@@ -274,7 +272,7 @@ public class CommandController implements Runnable {
      * DESC: show user info.<br>
      * CONSOLE: <code>ShowInfo (name)</code>
      *
-     * @param args Input arguments for function <code>Create</code>
+     * @param args Input arguments for function <code>ShowInfo</code>
      *
      * @return 0 - successful <br>
      *         1 - Wrong numbers of input argument<br>
@@ -322,10 +320,14 @@ public class CommandController implements Runnable {
                 System.out.println("passive");
 
             // Print user events
+            long userTimezoneMS  = userFound.getTimezone() * 60 * 60 * 1000;
             for (Event event : userFound.getEventPool())
             {
+                long eventDateMS = event.getDate().getTime();
+//                Date userDateVeiw = new Date(eventDateMS + userTimezoneMS); // for print time regard user timezone
+                Date userDateVeiw = new Date(eventDateMS);                    // for print time regard system time
                 Formatter formatter = new Formatter();
-                formatter.format("%1$td.%1$tm.%1$tY-%tT", event.getDate());
+                formatter.format("%1$td.%1$tm.%1$tY-%tT", userDateVeiw);
                 System.out.println(formatter + " " + event.getText());
                 formatter.close();
             }
@@ -339,7 +341,7 @@ public class CommandController implements Runnable {
      * DESC: add event for user.<br>
      * CONSOLE: <code>AddEvent (name, text, datetime)</code>
      *
-     * @param args Input arguments for function <code>Create</code>
+     * @param args Input arguments for function <code>AddEvent</code>
      *
      * @return 0 - successful <br>
      *         1 - Wrong numbers of input argument<br>
@@ -399,10 +401,10 @@ public class CommandController implements Runnable {
                 sdf.setLenient(false); // for auto check validity of date
 
                 int userTimezone = userFound.getTimezone();           // get user timezone
-                int addMilliSeconds = userTimezone * 60 * 60 * 1000;  // convert hours to milliseconds
+                int subMilliSeconds = userTimezone * 60 * 60 * 1000;  // convert hours to milliseconds
                 Date dateParse = sdf.parse(stringDate);               // parse input date
                                                                       // if date is invalid then auto create exception
-                Date eventDate = new Date(dateParse.getTime() + addMilliSeconds);
+                Date eventDate = new Date(dateParse.getTime() - subMilliSeconds);
                 userFound.addEvent(new Event(eventText, eventDate));
             } catch (ParseException e) {
                 System.err.println("Invalid date.");
@@ -411,6 +413,269 @@ public class CommandController implements Runnable {
         }
 
         System.out.println(">> Add new event for " + userName);
+
+        return 0;
+    }
+
+
+    /**
+     * DESC: remove event for user.<br>
+     * CONSOLE: <code>RemoveEvent(name, text)</code>
+     *
+     * @param args Input arguments for function <code>RemoveEvent</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - User with this name not found<br>
+     *         4 - Event with this text not found<br>
+     */
+    private int cRemoveEvent (String[] args)
+    {
+        // Check nums of input argument.
+        if ( args == null || args.length != 2 )
+        {
+            System.err.println("Wrong nums of input argument. Enter Help for more info.");
+            return 1;
+        }
+
+        // Check format user name
+        if ( !args[0].matches("\\w+") )
+        {
+            System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
+            return 2;
+        }
+
+        String userName = args[0];
+        String eventText = args[1];
+
+        // Find user and set flag isUserExist if user with this name already exist
+        User userFound = getUser(userName);
+        boolean isUserExist = (userFound != null);
+
+        if ( !isUserExist )
+        {
+            // Error: user with enter name not found.
+            System.err.println("User with this name not found.");
+            return 3;
+        }
+
+        synchronized (userFound)
+        {
+            int removeIndex = -1;
+            List<Event> eventPool = userFound.getEventPool();
+            for (Event event : eventPool)
+            {
+                if (event.getText().equals(eventText))
+                {
+                    removeIndex = eventPool.indexOf(event);
+                    break;
+                }
+            }
+
+            if (removeIndex < 0)
+            {
+                System.err.println("Event with this text not found.");
+                return 4;
+            }
+
+            eventPool.remove(removeIndex);
+        }
+
+        System.out.println(">> Remove event completed.");
+
+        return 0;
+    }
+
+
+    /**
+     * DESC: add event in random time between dateFrom and dateTo.<br>
+     * CONSOLE: <code>AddRandomTimeEvent(name, text, dateFrom, dateTo)</code>
+     *
+     * @param args Input arguments for function <code>AddRandomTimeEvent</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - Wrong date format<br>
+     *         4 - User with this name not found<br>
+     *         5 - Invalid date<br>
+     *         6 - Inner error (<code>dateFrom</code> or <code>dateTo</code> is <code>null</code>)<br>
+     */
+    private int cAddRandomTimeEvent (String[] args)
+    {
+        // Check nums of input argument.
+        if ( args == null || args.length != 4 )
+        {
+            System.err.println("Wrong nums of input argument.");
+            System.err.println("Date format DD.MM.YYYY-hh:mm:ss");
+            System.err.println("Enter Help for more info.");
+            return 1;
+        }
+
+        // Check format user name.
+        if ( !args[0].matches("\\w+") )
+        {
+            System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
+            return 2;
+        }
+
+        // Check date format.
+        // With this parser into getArgument method it's unreachable check because
+        //    if the date does not match the required format then nums of input argument
+        //    does not equals 4.
+        //    (parse is invalid sometimes because find words but "ignore" separators)
+        if ( !args[2].matches("\\d{2}\\.\\d{2}\\.\\d{4}\\-\\d{2}\\:\\d{2}:\\d{2}")
+                || !args[3].matches("\\d{2}\\.\\d{2}\\.\\d{4}\\-\\d{2}\\:\\d{2}:\\d{2}"))
+        {
+            System.err.println("Wrong date format. Date format DD.MM.YYYY-hh:mm:ss");
+            return 3;
+        }
+
+        String userName       = args[0];
+        String eventText      = args[1];
+        String stringDateFrom = args[2];
+        String stringDateTo   = args[3];
+
+        // Find user and set flag isUserExist if user with this name already exist
+        User userFound = getUser(userName);
+        boolean isUserExist = (userFound != null);
+
+        if ( !isUserExist )
+        {
+            // Error: user with enter name not found.
+            System.err.println("User with this name not found.");
+            return 4;
+        }
+
+        // Create date objects for getting long value
+        Date dateFrom = null;
+        Date dateTo   = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
+            sdf.setLenient(false); // for auto check validity of date
+            dateFrom = sdf.parse(stringDateFrom);
+            dateTo   = sdf.parse(stringDateTo);
+        } catch (ParseException e) {
+            System.err.println("Invalid date.");
+            return 5;
+        }
+
+        if (dateFrom == null || dateTo == null)
+        {
+            System.err.println("cAddRandomTimeEvent: Inner error.");
+            return 6;
+        }
+
+        // Generate random date between dateFrom and dateTo:
+        //    setTime = baseTime + random*diffTime
+        // ,where
+        //    baseTime = min (dateFrom, dateTo)
+        //    0.0 <= random <= 1.0
+        //    diffTime = abs( dateFrom - dateTo )
+
+        long dateFromMS = dateFrom.getTime();               // get dateFrom
+        long dateToMS   = dateTo.getTime();                 // get dateTo
+        long setTime = Math.min(dateFromMS, dateToMS);      // get baseTime
+        long diffTime = Math.abs(dateFromMS - dateToMS);    // get diffTime
+        Random random = new Random(new Date().getTime());   // set seed for random
+        double resRand = random.nextDouble();               // get random
+        long addTime = (long) (resRand * (double) diffTime);// calculate (random*diffTime)
+        setTime += addTime;                                 // get setTime
+
+        synchronized (userFound)
+        {
+            int userTimezone = userFound.getTimezone();
+            setTime -= (userTimezone*60*60*1000);            // correct time regarding user timezone
+            Date setDate = new Date(setTime);                // create date with setTime
+            Event newEvent = new Event(eventText, setDate);
+            userFound.addEvent(newEvent);
+        }
+
+        System.out.println(">> Add new event for " + userName + " in random time");
+
+        return 0;
+    }
+
+
+    /**
+     * DESC: clone user1 event for user2.
+     * Time of event1 and event2 equals regard server time.<br>
+     * CONSOLE: <code>CloneEvent(name, text, nameTo)</code>
+     *
+     * @param args Input arguments for function <code>CloneEvent</code>
+     *
+     * @return 0 - successful <br>
+     *         1 - Wrong numbers of input argument<br>
+     *         2 - Wrong user name<br>
+     *         3 - UserFrom name not found<br>
+     *         4 - UserTo name not found<br>
+     *         5 - Event in userFrom event pool not found<br>
+     */
+    private int cCloneEvent (String[] args)
+    {
+        // Check nums of input argument.
+        if ( args == null || args.length != 3 )
+        {
+            System.err.println("Wrong nums of input argument. Enter Help for more info.");
+            return 1;
+        }
+
+        // Check format user name
+        if ( !args[0].matches("\\w+") || !args[2].matches("\\w+") )
+        {
+            System.err.println("Wrong user name. Use only [a-zA-Z0-9].");
+            return 2;
+        }
+
+        String userNameFrom = args[0];
+        String userNameTo   = args[2];
+        String eventText    = args[1];
+
+        // Check existing userFrom
+        User userFrom = getUser(userNameFrom);
+        boolean isUserExist = (userFrom != null);
+        if ( !isUserExist )
+        {
+            System.err.println("UserFrom name not found.");
+            return 3;
+        }
+
+        // Check existing userTo
+        User userTo = getUser(userNameTo);
+        isUserExist = (userTo != null);
+        if ( !isUserExist )
+        {
+            System.err.println("UserTo name not found.");
+            return 4;
+        }
+
+        synchronized (userFrom)
+        {
+            synchronized (userTo)
+            {
+                // Find event in userFrom event pool and clone event for userTo
+                boolean isCloneEvent = false;
+                List<Event> eventPoolUserFrom = userFrom.getEventPool();
+                for (Event event : eventPoolUserFrom)
+                {
+                    if (event.getText().equals(eventText))
+                    {
+                        userTo.addEvent(event.clone());
+                        isCloneEvent = true;
+                        break;
+                    }
+                }
+                // Check calling event.clone()
+                if ( !isCloneEvent )
+                {
+                    System.err.println("Event in userFrom event pool not found.");
+                    return 5;
+                }
+            }
+        }
+
+        System.out.println(">> Event clone from " + userNameFrom + " to " + userNameTo);
 
         return 0;
     }
@@ -508,12 +773,3 @@ public class CommandController implements Runnable {
     }
 
 }
-
-/*
-For test:
-Create (user1, -2, passive)
-Modify (user1, 0, active)
-AddEvent(user1,"Hello world", 19.11.1995-18:11:11)
-AddEvent(user1,"Hello world2", 19.11.1995-18:11:11)
-ShowInfo(user1)
- */
