@@ -115,7 +115,7 @@ public class ScanningAction {
                 taskReader.showInfo(name);
                 break;
             case "Start":
-                System.out.println(111);
+                System.out.println("Scheduling is started");
                 Thread thread = new Thread(new TaskWriter());
                 thread.start();
                 break;
