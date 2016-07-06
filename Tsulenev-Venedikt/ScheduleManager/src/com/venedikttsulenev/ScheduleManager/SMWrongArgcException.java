@@ -1,7 +1,7 @@
 package com.venedikttsulenev.ScheduleManager;
 
 public class SMWrongArgcException extends Exception {
-    private int argc;
+    private final int argc;
     SMWrongArgcException(int expectedArgc) {
         this.argc = expectedArgc;
     }

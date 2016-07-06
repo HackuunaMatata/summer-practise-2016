@@ -5,16 +5,13 @@ import java.util.*;
 public class SMScheduler {
     private static final int DEFAULT_USERS_CAPACITY = 256;
     private static final int DEFAULT_EVENTS_CAPACITY = 1024;
-    private static final TimeZone LOCAL_TIME_ZONE = TimeZone.getDefault();
     private final HashMap<String, SMUser> users;
     private final ArrayList<SMEvent> sortedEvents;
     private final Random random;
-//    private volatile int sortedEventsOffset;
     SMScheduler() {
         users = new HashMap<String, SMUser>(DEFAULT_USERS_CAPACITY);
         sortedEvents = new ArrayList<SMEvent>(DEFAULT_EVENTS_CAPACITY);
         random = new Random();
-//        sortedEventsOffset = 0;
         SMSchedulingThread schedThr = new SMSchedulingThread(sortedEvents, 100);
         schedThr.start();
     }

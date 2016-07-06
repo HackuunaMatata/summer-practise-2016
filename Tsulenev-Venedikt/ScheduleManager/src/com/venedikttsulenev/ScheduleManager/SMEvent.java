@@ -36,6 +36,6 @@ public class SMEvent implements Comparable<SMEvent> {
         if (this.date.getTime() > otherEvent.getDate().getTime())
             return 1;
         int cmp = otherEvent.getText().compareTo(this.text);
-        return cmp != 0 ? cmp : otherEvent.getUser().compareTo(this.user);
+        return cmp != 0 ? cmp : otherEvent.getUser().getName().compareTo(this.user.getName());
     }
 }

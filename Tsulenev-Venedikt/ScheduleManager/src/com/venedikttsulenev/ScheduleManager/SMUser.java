@@ -17,14 +17,8 @@ public class SMUser {
     public static Date convertDateToTimeZone(Date date, TimeZone oldTZ, TimeZone newTZ) {
         return new Date(date.getTime() + newTZ.getRawOffset() - oldTZ.getRawOffset());
     }
-    public int compareTo(SMUser usr) {
-        return this.name.compareTo(usr.getName());
-    }
     public String getName() {
         return name;
-    }
-    public Collection<SMEvent> getEvents() {
-        return events.values();
     }
     public void addEvent(SMEvent event) {
         if (!events.containsKey(event.getText()))
@@ -35,9 +29,6 @@ public class SMUser {
     }
     public void removeEvent(String text) {
         events.remove(text);
-    }
-    public TimeZone getTimeZone() {
-        return this.timeZone;
     }
     public boolean getActive() {
         return this.active;
