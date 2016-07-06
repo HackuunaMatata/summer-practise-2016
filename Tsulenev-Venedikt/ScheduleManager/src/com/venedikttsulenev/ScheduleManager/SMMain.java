@@ -4,72 +4,78 @@ import java.text.*;
 import java.util.*;
 
 public class SMMain {
+    private static final SMScheduler scheduler = new SMScheduler();
     public static void main(String args[]) {
-        SMScheduler scheduler = new SMScheduler();
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
         Scanner input = new Scanner(System.in);
-        String inp;
-        String cmd, arg1, arg2, arg3, arg4;
+        String inp, cmd;
+        String arg[] = new String[4];
         while (input.hasNextLine()) {
             inp = input.nextLine();
             StringTokenizer st = new StringTokenizer(inp, "(, )");
-            cmd = st.nextToken();
-            arg1 = arg2 = arg3 = arg4 = null;
-            if (st.hasMoreTokens())
-                arg1 = st.nextToken();
-            if (st.hasMoreTokens())
-                arg2 = st.nextToken();
-            if (st.hasMoreTokens())
-                arg3 = st.nextToken();
-            if (st.hasMoreTokens())
-                arg4 = st.nextToken();
-            if (cmd.equals("ShowInfo")) {
-                if (arg1 != null)
-                    System.out.println(scheduler.getInfo(arg1));
-            }
-            else if (cmd.equals("CloneEvent")) {
-                if (arg1 != null && arg2 != null && arg3 != null)
-                    System.out.println(scheduler.cloneEvent(arg1, arg2, arg3));
-            }
-            else if (cmd.equals("AddRandomTimeEvent")) {
-                if (arg1 != null && arg2 != null && arg3 != null && arg4 != null) {
+            if (st.hasMoreTokens()) {
+                cmd = st.nextToken();
+                int argc = 0;
+                while (argc < 4 && st.hasMoreTokens()) {
+                    arg[argc++] = st.nextToken();
+                }
+                synchronized (scheduler) {
                     try {
-                        Date dateFrom = dateFormat.parse(arg3);
-                        Date dateTo = dateFormat.parse(arg4);
-                        System.out.println(scheduler.addRandomTimeEvent(arg1, arg2, dateFrom, dateTo));
+                        switch (cmd) {
+                            case "ShowInfo":
+                                if (argc != 1)
+                                    throw new SMWrongArgcException(1);
+                                System.out.println(scheduler.getInfo(arg[0]));
+                                break;
+                            case "CloneEvent":
+                                if (argc != 3)
+                                    throw new SMWrongArgcException(3);
+                                System.out.println(scheduler.cloneEvent(arg[0], arg[1], arg[2]));
+                                break;
+                            case "AddRandomTimeEvent":
+                                if (argc != 4)
+                                    throw new SMWrongArgcException(4);
+                                Date dateFrom = dateFormat.parse(arg[2]);
+                                Date dateTo = dateFormat.parse(arg[3]);
+                                System.out.println(scheduler.addRandomTimeEvent(arg[0], arg[1], dateFrom, dateTo));
+                                break;
+                            case "RemoveEvent":
+                                if (argc != 2)
+                                    throw new SMWrongArgcException(2);
+                                System.out.println(scheduler.removeEvent(arg[0], arg[1]));
+                                break;
+                            case "AddEvent":
+                                if (argc != 3)
+                                    throw new SMWrongArgcException(3);
+                                Date date = dateFormat.parse(arg[2]);
+                                System.out.println(scheduler.addEvent(arg[0], arg[1], date));
+                                break;
+                            case "Modify":
+                                if (argc != 3)
+                                    throw new SMWrongArgcException(3);
+                                else {
+                                    TimeZone tz = TimeZone.getTimeZone(arg[1]);
+                                    if (tz != null)
+                                        System.out.println(scheduler.modifyUser(arg[0], tz, Boolean.parseBoolean(arg[2])));
+                                }
+                                break;
+                            case "Create":
+                                if (argc != 3)
+                                    throw new SMWrongArgcException(3);
+                                else {
+                                    TimeZone tz = TimeZone.getTimeZone(arg[1]);
+                                    if (tz != null)
+                                        System.out.println(scheduler.addUser(arg[0], tz, Boolean.parseBoolean(arg[2])));
+                                }
+                                break;
+                            default:
+                                System.out.println("Unknown command \"" + cmd + '\"');
+                        }
+                    } catch (ParseException ex) {
+                        System.out.println("Error: " + ex.getMessage() + ". Expected date format: DD.MM.YYYY-HH24:Mi:SS.");
+                    } catch (SMWrongArgcException ex) {
+                        System.out.println("Error: " + ex.getMessage());
                     }
-                    catch (ParseException ex) {
-                        System.out.println("Could not parse date (should be: DD.MM.YYYY-HH24:Mi:SS)");
-                    }
-                }
-            }
-            else if (cmd.equals("RemoveEvent")) {
-                if (arg1 != null && arg2 != null)
-                    System.out.println(scheduler.removeEvent(arg1, arg2));
-            }
-            else if (cmd.equals("AddEvent")) {
-                if (arg1 != null && arg2 != null && arg3 != null) {
-                    try {
-                        Date date = dateFormat.parse(arg3);
-                        System.out.println(scheduler.addEvent(arg1, arg2, date));
-                    }
-                    catch (ParseException ex) {
-                        System.out.println("Could not parse date (should be: DD.MM.YYYY-HH24:Mi:SS)");
-                    }
-                }
-            }
-            else if (cmd.equals("Modify")) {
-                if (arg1 != null && arg2 != null && arg3 != null) {
-                    TimeZone tz = TimeZone.getTimeZone(arg2);
-                    if (tz != null)
-                        System.out.println(scheduler.modifyUser(arg1, tz, Boolean.parseBoolean(arg3)));
-                }
-            }
-            else if (cmd.equals("Create")) {
-                if (arg1 != null && arg2 != null && arg3 != null) {
-                    TimeZone tz = TimeZone.getTimeZone(arg2);
-                    if (tz != null)
-                        System.out.println(scheduler.addUser(arg1, tz, Boolean.parseBoolean(arg3)));
                 }
             }
         }

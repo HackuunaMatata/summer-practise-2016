@@ -6,13 +6,16 @@ public class SMUser {
     private static final int DEFAULT_EVENTS_CAPACITY = 256;
     private TimeZone timeZone;
     private boolean active;
-    private String name;
-    private HashMap<String, SMEvent> events;
+    private final String name;
+    private final HashMap<String, SMEvent> events;
     SMUser(String name, TimeZone timeZone, boolean active) {
         this.name = name;
         this.timeZone = timeZone;
         this.active = active;
         this.events = new HashMap<String, SMEvent>(DEFAULT_EVENTS_CAPACITY);
+    }
+    public static Date convertDateToTimeZone(Date date, TimeZone oldTZ, TimeZone newTZ) {
+        return new Date(date.getTime() + newTZ.getRawOffset() - oldTZ.getRawOffset());
     }
     public int compareTo(SMUser usr) {
         return this.name.compareTo(usr.getName());
@@ -40,14 +43,14 @@ public class SMUser {
         return this.active;
     }
     public void modify(TimeZone timeZone, boolean active) {
-        for (SMEvent event : events.values()) {
-            Date newDate = new Date(event.getDate().getTime() + timeZone.getRawOffset() - this.timeZone.getRawOffset());
-            event.setDate(newDate);
-        }
+        for (SMEvent event : events.values())
+            event.setDate(convertDateToTimeZone(event.getDate(), this.timeZone, timeZone));
         this.timeZone = timeZone;
         this.active = active;
     }
     public String getInfo() {
+        ArrayList<SMEvent> evs = new ArrayList<SMEvent>(events.values());
+        Collections.sort(evs);
         String info;
         info = "User: " + name + '\n'
                 + "   Time zone: " + timeZone.getID() + '\n'
@@ -56,8 +59,8 @@ public class SMUser {
             info += "   No events for this user";
         else {
             info += "   Events:\n";
-            for (SMEvent event : events.values())
-                info += event.getDate().toString() + ":   " + event.getText() + '\n';
+            for (SMEvent event : evs)
+                info += "      " + event.getDate().toString() + ":   " + event.getText() + '\n';
         }
         return info;
     }

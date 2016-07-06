@@ -3,9 +3,9 @@ package com.venedikttsulenev.ScheduleManager;
 import java.util.Date;
 
 public class SMEvent implements Comparable<SMEvent> {
-    private String text;
+    private final String text;
     private Date date;
-    private SMUser user;
+    private final SMUser user;
     SMEvent(SMUser user, String text, Date date) {
         this.user = user;
         this.text = text;

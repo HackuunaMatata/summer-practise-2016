@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SMSchedulingThread extends Thread {
-    private ArrayList<SMEvent> eventList;
+    private final ArrayList<SMEvent> eventList;
     private int checkInterval;
     private boolean scheduling;
     SMSchedulingThread(ArrayList<SMEvent> evList, int checkIntervalMillis) {
@@ -12,12 +12,12 @@ public class SMSchedulingThread extends Thread {
         this.checkInterval = checkIntervalMillis;
         this.scheduling = true;
     }
-    public void pauseScheduling() {
-        scheduling = false;
-    }
-    public void resumeScheduling() {
-        scheduling = true;
-    }
+//    public void pauseScheduling() {
+//        scheduling = false;
+//    }
+//    public void resumeScheduling() {
+//        scheduling = true;
+//    }
     public void run() {
         long time = (new Date()).getTime();
         long prevtime = time - checkInterval;
@@ -27,8 +27,8 @@ public class SMSchedulingThread extends Thread {
                     int i = 0;
                     SMEvent event = eventList.get(0);
                     while (i < eventList.size()
-                            && (event.getDate().getTime() < time
-                            && event.getDate().getTime() > prevtime)
+                            && event.getDate().getTime() < time
+                            && event.getDate().getTime() > prevtime
                             && event.getUser().getActive())
                     {
                         System.out.println(
