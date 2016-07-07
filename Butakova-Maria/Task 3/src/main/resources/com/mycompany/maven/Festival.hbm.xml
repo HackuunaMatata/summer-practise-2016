@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07.07.2016 16:47:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.maven.Festival" table="festival" catalog="test" optimistic-lock="version">
+        <id name="name" type="string">
+            <column name="Name" length="40" />
+            <generator class="assigned" />
+        </id>
+        <property name="city" type="string">
+            <column name="City" length="40" />
+        </property>
+        <property name="places" type="java.lang.Integer">
+            <column name="Places" />
+        </property>
+        <property name="country" type="string">
+            <column name="Country" length="40" />
+        </property>
+        <property name="organizer" type="string">
+            <column name="Organizer" length="40" />
+        </property>
+    </class>
+</hibernate-mapping>

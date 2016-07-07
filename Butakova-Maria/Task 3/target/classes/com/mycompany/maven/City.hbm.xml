@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07.07.2016 16:47:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.maven.City" table="city" catalog="test" optimistic-lock="version">
+        <id name="name" type="string">
+            <column name="Name" length="40" />
+            <generator class="assigned" />
+        </id>
+        <property name="population" type="java.lang.Integer">
+            <column name="Population" />
+        </property>
+        <property name="area" type="java.lang.Integer">
+            <column name="Area" />
+        </property>
+        <property name="country" type="string">
+            <column name="Country" length="40" />
+        </property>
+        <set name="countries" table="country" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="capital" length="40" />
+            </key>
+            <one-to-many class="com.mycompany.maven.Country" />
+        </set>
+    </class>
+</hibernate-mapping>

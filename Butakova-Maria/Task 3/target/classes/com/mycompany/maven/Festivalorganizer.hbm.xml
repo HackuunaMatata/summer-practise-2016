@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 07.07.2016 16:47:40 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.mycompany.maven.Festivalorganizer" table="festivalorganizer" catalog="test" optimistic-lock="version">
+        <composite-id name="id" class="com.mycompany.maven.FestivalorganizerId">
+            <key-property name="name" type="string">
+                <column name="Name" length="40" />
+            </key-property>
+            <key-property name="accreditationCountry" type="string">
+                <column name="AccreditationCountry" length="40" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
