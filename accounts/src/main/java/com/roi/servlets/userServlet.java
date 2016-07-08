@@ -20,8 +20,6 @@ public class userServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String userID = (String) session.getAttribute("userID");
 
-        System.out.println(userID);
-
         request.getRequestDispatcher("/WEB-INF/templates/user.html").forward(request, response);
     }
 
