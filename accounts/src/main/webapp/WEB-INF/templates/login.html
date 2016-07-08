@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <script type="text/javascript" src="resources/js/loginController.js"></script>
+    <script type="text/javascript" src="resources/libs/jquery-3.0.0.min.js"></script>
 </head>
 <body>
 
-Hello
+<div>Name: <input type="text" name="name"></div>
+<div>Surname: <input type="text" name="surname"></div>
+<div><span id="textID" hidden>ID:</span> <input hidden type="text" name="userID" value=""></div>
+<div>
+    <button id="setData" onclick="setUserData()">Sign In</button>
+</div>
+<div>
+    <form action="/user" method="post">
+        <button id="toProfile" hidden >Sign In</button>
+    </form>
+</div>
 
 </body>
 </html>
