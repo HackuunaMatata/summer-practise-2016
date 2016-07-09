@@ -14,7 +14,7 @@ public class ContactHobbyDetailEntity {
     private ContactEntity contactByContactId;
 
     @Id
-    @Column(name = "contact_id", nullable = false, insertable = false, updatable = false)
+    @Column(name = "contact_id", nullable = false)
     public int getContactId() {
         return contactId;
     }
@@ -55,7 +55,7 @@ public class ContactHobbyDetailEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "contact_id", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "contact_id", referencedColumnName = "ID", nullable = false, insertable = false, updatable = false)
     public ContactEntity getContactByContactId() {
         return contactByContactId;
     }
