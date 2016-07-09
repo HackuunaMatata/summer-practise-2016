@@ -1,6 +1,8 @@
 var receivedData = {};
+getUserInfo();
 
 function getUserInfo() {
+
     $.ajax({
         url: "/user",
         dataType: 'json',
@@ -9,7 +11,11 @@ function getUserInfo() {
 
             $.each(json, function (key, value) {
                 receivedData[key] = value;
-                table = table + "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+                table = table +
+                    "<tr>" +
+                    "<td>" + key + "</td>" +
+                    "<td><input id='" + key + "' value='" + value + "'></td>" +
+                    "</tr>";
             });
 
             console.log(receivedData);
@@ -24,9 +30,13 @@ function getUserInfo() {
     });
 }
 
-getUserInfo();
-
 function saveData() {
+    
+    $.each(receivedData, function (key) {
+        var id = "#" + key;
+        receivedData[key] = $(id).val();
+    });
+    
     $.ajax({
         type: "POST",
         data: receivedData,
