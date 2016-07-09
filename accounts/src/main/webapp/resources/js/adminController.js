@@ -17,12 +17,15 @@ function getUsers() {
             });
             
             console.log(users);
+
+            addUser();
         },
         error: function () {
             alert("Errr is occured");
         }
     });
 }
+
 
 function addUser() {
     var select = "<br/><select id='"+ "sel" + selected++ +"'>";
