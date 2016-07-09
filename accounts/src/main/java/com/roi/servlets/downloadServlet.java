@@ -1,33 +1,27 @@
 package com.roi.servlets;
 
-import org.json.JSONObject;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Map;
 
-/**
- * Created by Vesdet on 09.07.2016.
- */
-@WebServlet(name = "getUsersServlet", urlPatterns = "/usersInfo")
-public class getUsersServlet extends HttpServlet {
+@WebServlet(name = "downloadServlet", urlPatterns = "/download")
+public class downloadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        PrintWriter out = response.getWriter();
+        Map<String, String[]> map = request.getParameterMap();
+        String[] usersID = map.get("download[]");
 
-        JSONObject json = new JSONObject();
+        // В usersID id тех user'ов, кот выбрал для скачивания admin
 
-        String user = "Sasha" + " " + "Pankratova";
-        json.put("11", user);
 
-        String user2 = "Nikita" + " " + "Ryzhov";
-        json.put("13", user2);
+        for (String userID : usersID) {
+            System.out.println(userID);
+        }
 
-        out.print(json);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -1,6 +1,67 @@
 var receivedData = {};
 getQuestions();
 
+var users = [];
+getUsers();
+
+var selected = 0;
+
+function getUsers() {
+    $.ajax({
+        type: "POST",
+        url: "/usersInfo",
+        dataType: 'json',
+        success: function (json) {
+            $.each(json, function (id, user) {
+                users[id] = user;
+            });
+            
+            console.log(users);
+        },
+        error: function () {
+            alert("Errr is occured");
+        }
+    });
+}
+
+function addUser() {
+    var select = "<br/><select id='"+ "sel" + selected++ +"'>";
+    users.forEach(function (user, index, users) {
+        select = select + "<option value='" + index + "'>" + index + " " + user + "</option>";
+    });
+    select = select + "</select>";
+    $("#users").append(select);
+}
+
+function download() {
+    
+    var usersDownload = [];
+    var current;
+    
+    for (var i=0; i<selected; i++) {
+        current = "#sel" + i;
+        usersDownload.push($(current + " option:selected").val());
+    }
+    console.log(usersDownload);
+
+    // var data = {};
+    // data.download = usersDownload;
+    //
+    // console.log(data);
+    
+    $.ajax({
+        type: "POST",
+        url: "/download",
+        data: {"download" : usersDownload},
+        success: function (json) {
+            console.log("User's ID send to BE");
+        },
+        error: function () {
+            alert("Errr is occured");
+        }
+    });
+}
+
 function getQuestions() {
 
     $.ajax({
@@ -29,12 +90,16 @@ function getQuestions() {
                         if (param == "Type") {
                             if (correct == true) {
                                 table = table + "<td><input type='text' value='" + question + "'></td><td>";
+                                if (value != "list") {
+                                    table = table + "<input type='text' value='" + value + "'></td>";
+                                }
                             } else {
                                 table = table + "<td>" + question + "</td><td>";
+                                if (value != "list") {
+                                    table = table + value + "</td>";
+                                }
                             }
-                            if (value != "list") {
-                                table = table + value + "</td>";
-                            }
+                            
                         }
                         if (param == "Variants") {
                             $.each(value, function (key, current) {
@@ -46,15 +111,7 @@ function getQuestions() {
                     
                 });
                 table = table + "</tr>";
-                // receivedData[key] = value;
-                // table = table +
-                //     "<tr>" +
-                //     "<td>" + key + "</td>" +
-                //     "<td><input id='" + key + "' value='" + value + "'></td>" +
-                //     "</tr>";
             });
-
-            // console.log(receivedData);
 
             table = table + "</table></html>";
 
