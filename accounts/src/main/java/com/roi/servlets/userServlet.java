@@ -17,9 +17,6 @@ import java.io.PrintWriter;
 @WebServlet(name = "userServlet", urlPatterns = "/user")
 public class userServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String userID = (String) session.getAttribute("userID");
-
         request.getRequestDispatcher("/WEB-INF/templates/user.html").forward(request, response);
     }
 

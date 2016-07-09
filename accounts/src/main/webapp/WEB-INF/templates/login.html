@@ -16,8 +16,10 @@
 </div>
 <div>
     <form action="/user" method="post">
+        <span name="textProfile" hidden >You are sure of these data?</span>
         <button id="toProfile" hidden >Sign In</button>
     </form>
+    <button id="incorrectData" hidden onclick="refresh()">Cancel</button>
 </div>
 
 </body>

@@ -17,8 +17,17 @@ function setUserData()
                 $("#textID").show();
             } else {
                 $("#setData").hide();
+                $("span[name*='textProfile']").show();
                 $("#toProfile").show();
+                $("#incorrectData").show();
             }
         }
     });
+}
+
+function refresh() {
+    $("#setData").show();
+    $("span[name*='textProfile']").hide();
+    $("#toProfile").hide();
+    $("#incorrectData").hide();
 }

@@ -19,10 +19,10 @@ function getUserInfo() {
             });
 
             console.log(receivedData);
-
-            $("#output").html(table);
             
             table = table + "</table></html>";
+            
+            $("#output").html(table);
         },
         error: function () {
             alert("Errr is occured");
