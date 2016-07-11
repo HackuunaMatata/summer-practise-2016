@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script type="text/javascript" src="resources/libs/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="resources/js/loginController.js"></script>
+</head>
+<body>
+
+<div>Name: <input type="text" name="name"></div>
+<div>Surname: <input type="text" name="surname"></div>
+<div><span id="textID" hidden>ID:</span> <input hidden type="text" name="userID" value=""></div>
+<div>
+    <button id="setData" onclick="setUserData()">Sign In</button>
+</div>
+<div>
+    <form action="/user" method="post">
+        <span name="textProfile" hidden >You are sure of these data?</span>
+        <button id="toProfile" hidden >Sign In</button>
+    </form>
+    <button id="incorrectData" hidden onclick="refresh()">Cancel</button>
+</div>
+
+</body>
+</html>
