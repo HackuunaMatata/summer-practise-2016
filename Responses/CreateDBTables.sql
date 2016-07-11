@@ -22,5 +22,6 @@ CREATE TABLE Forms (
 );
 
 CREATE TABLE Admin (
-	EMail VARCHAR(256)
+	EMail VARCHAR(256),
+	PRIMARY KEY (EMail)
 );

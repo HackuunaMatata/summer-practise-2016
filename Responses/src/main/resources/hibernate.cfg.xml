@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/Responses</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hbm2ddl.auto">update</property> -->
+    <mapping class="QuestionsEntity"/>
+    <mapping class="AnswersEntity"/>
+    <mapping class="FormsEntity"/>
+    <mapping class="AdminEntity"/>
+    <mapping class="dbEntities.AdminEntity"/>
+    <mapping class="dbEntities.AnswersEntity"/>
+    <mapping class="dbEntities.FormsEntity"/>
+    <mapping class="dbEntities.QuestionsEntity"/>
+
+  </session-factory>
+</hibernate-configuration>
