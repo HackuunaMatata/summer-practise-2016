@@ -1,6 +1,7 @@
 package com.venedikttsulenev.Task3;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by venedikttsulenev on 11/07/16.
@@ -12,6 +13,9 @@ public class CityEntity {
     private Integer population;
     private Integer area;
     private String country;
+    private CountryEntity countryByCountry;
+    private Collection<CountryEntity> countriesByName;
+    private Collection<FestivalEntity> festivalsByName;
 
     @Id
     @Column(name = "Name")
@@ -43,14 +47,16 @@ public class CityEntity {
         this.area = area;
     }
 
-
+    @Basic
     @Column(name = "Country")
     public String getCountry() {
         return country;
     }
-    
-    public void setCountry(String country) { this.country = country; }
-    
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,5 +79,33 @@ public class CityEntity {
         result = 31 * result + (area != null ? area.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "Country", referencedColumnName = "Name", nullable = false)
+    public CountryEntity getCountryByCountry() {
+        return countryByCountry;
+    }
+
+    public void setCountryByCountry(CountryEntity countryByCountry) {
+        this.countryByCountry = countryByCountry;
+    }
+
+    @OneToMany(mappedBy = "cityByCapital")
+    public Collection<CountryEntity> getCountriesByName() {
+        return countriesByName;
+    }
+
+    public void setCountriesByName(Collection<CountryEntity> countriesByName) {
+        this.countriesByName = countriesByName;
+    }
+
+    @OneToMany(mappedBy = "cityByCity")
+    public Collection<FestivalEntity> getFestivalsByName() {
+        return festivalsByName;
+    }
+
+    public void setFestivalsByName(Collection<FestivalEntity> festivalsByName) {
+        this.festivalsByName = festivalsByName;
     }
 }

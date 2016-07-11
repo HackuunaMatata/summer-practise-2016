@@ -1,6 +1,7 @@
 package com.venedikttsulenev.Task3;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by venedikttsulenev on 11/07/16.
@@ -12,6 +13,9 @@ public class CountryEntity {
     private Integer population;
     private Integer area;
     private String capital;
+    private Collection<CityEntity> citiesByName;
+    private CityEntity cityByCapital;
+    private Collection<FestivalOrganizerEntity> festivalOrganizersByName;
 
     @Id
     @Column(name = "Name")
@@ -43,7 +47,7 @@ public class CountryEntity {
         this.area = area;
     }
 
-
+    @Basic
     @Column(name = "Capital")
     public String getCapital() {
         return capital;
@@ -52,7 +56,6 @@ public class CountryEntity {
     public void setCapital(String capital) {
         this.capital = capital;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -76,5 +79,33 @@ public class CountryEntity {
         result = 31 * result + (area != null ? area.hashCode() : 0);
         result = 31 * result + (capital != null ? capital.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "countryByCountry")
+    public Collection<CityEntity> getCitiesByName() {
+        return citiesByName;
+    }
+
+    public void setCitiesByName(Collection<CityEntity> citiesByName) {
+        this.citiesByName = citiesByName;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "Capital", referencedColumnName = "Name", nullable = false)
+    public CityEntity getCityByCapital() {
+        return cityByCapital;
+    }
+
+    public void setCityByCapital(CityEntity cityByCapital) {
+        this.cityByCapital = cityByCapital;
+    }
+
+    @OneToMany(mappedBy = "countryByAccreditationCountry")
+    public Collection<FestivalOrganizerEntity> getFestivalOrganizersByName() {
+        return festivalOrganizersByName;
+    }
+
+    public void setFestivalOrganizersByName(Collection<FestivalOrganizerEntity> festivalOrganizersByName) {
+        this.festivalOrganizersByName = festivalOrganizersByName;
     }
 }

@@ -1,6 +1,7 @@
 package com.venedikttsulenev.Task3;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by venedikttsulenev on 11/07/16.
@@ -11,6 +12,8 @@ import javax.persistence.*;
 public class FestivalOrganizerEntity {
     private String name;
     private String accreditationCountry;
+    private Collection<FestivalEntity> festivals;
+    private CountryEntity countryByAccreditationCountry;
 
     @Id
     @Column(name = "Name")
@@ -51,5 +54,24 @@ public class FestivalOrganizerEntity {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (accreditationCountry != null ? accreditationCountry.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "festivalOrganizer")
+    public Collection<FestivalEntity> getFestivals() {
+        return festivals;
+    }
+
+    public void setFestivals(Collection<FestivalEntity> festivals) {
+        this.festivals = festivals;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "AccreditationCountry", referencedColumnName = "Name", nullable = false)
+    public CountryEntity getCountryByAccreditationCountry() {
+        return countryByAccreditationCountry;
+    }
+
+    public void setCountryByAccreditationCountry(CountryEntity countryByAccreditationCountry) {
+        this.countryByAccreditationCountry = countryByAccreditationCountry;
     }
 }
