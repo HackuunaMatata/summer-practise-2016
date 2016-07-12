@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="hibernate.factory.ContactTelDetailEntity" table="contact_tel_detail" schema="javastudy">
+        <id name="id" column="id"/>
+        <property name="telType" column="tel_type"/>
+        <property name="telNumber" column="tel_number"/>
+        <property name="version" column="version"/>
+    </class>
+</hibernate-mapping>
