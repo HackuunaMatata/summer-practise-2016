@@ -2,6 +2,7 @@ CREATE TABLE Questions (
 	ID INT,
 	Value VARCHAR(1024),
 	isRequired BOOLEAN,
+	isActive BOOLEAN,
 	PRIMARY KEY (ID)
 );
 
