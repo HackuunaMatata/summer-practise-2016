@@ -2,9 +2,6 @@ package Responses.dbEntities;
 
 import javax.persistence.*;
 
-/**
- * Created by venedikttsulenev on 11/07/16.
- */
 @Entity
 @Table(name = "Forms", schema = "Responses", catalog = "")
 @IdClass(FormsEntityPK.class)

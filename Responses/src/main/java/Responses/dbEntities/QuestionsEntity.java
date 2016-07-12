@@ -3,15 +3,13 @@ package Responses.dbEntities;
 import javax.persistence.*;
 import java.util.Collection;
 
-/**
- * Created by venedikttsulenev on 11/07/16.
- */
 @Entity
 @Table(name = "Questions", schema = "Responses", catalog = "")
 public class QuestionsEntity {
     private int id;
     private String value;
     private Byte isRequired;
+    private Byte isActive;
     private Collection<FormsEntity> formsesById;
 
     @Id
@@ -44,6 +42,16 @@ public class QuestionsEntity {
         this.isRequired = isRequired;
     }
 
+    @Basic
+    @Column(name = "isActive")
+    public Byte getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Byte isActive) {
+        this.isActive = isActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,6 +62,7 @@ public class QuestionsEntity {
         if (id != that.id) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
         if (isRequired != null ? !isRequired.equals(that.isRequired) : that.isRequired != null) return false;
+        if (isActive != null ? !isActive.equals(that.isActive) : that.isActive != null) return false;
 
         return true;
     }
@@ -63,6 +72,7 @@ public class QuestionsEntity {
         int result = id;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (isRequired != null ? isRequired.hashCode() : 0);
+        result = 31 * result + (isActive != null ? isActive.hashCode() : 0);
         return result;
     }
 
