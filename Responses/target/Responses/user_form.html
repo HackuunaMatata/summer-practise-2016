@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Форма для пользователя</title>
+	</head>
+	<body>
+		<h1> Анкета для отзывов </h1>
+		<a href="admin_form.html"> Настройки администратора </a> <br>		
+		<p>
+		<fieldset>
+			<legend> Содержание анкеты: </legend>
+		    <ol>
+			<li><a href="#projectName"> Название проекта </a> <br>
+			<li><a href="#userName"> Имя </a> <br>
+			<li><a href="#userSurname"> Фамилия </a> <br>
+			<li><a href="#userEmail"> Email </a> <br>
+			<li><a href="#userPost"> Должность </a> <br>
+			<li><a href="#developmentOpinion"> Отзыв о состоянии дел в области разработки </a> <br>			 
+			<li><a href="#testingOpinion"> Отзыв о состоянии дел в области тестирования </a> <br>
+			<li><a href="#analysisOpinion"> Отзыв о состоянии дел в области анализа </a> <br>
+			<li><a href="#projectOpinion"> Отзыв о состоянии дел на проекте в целом </a> <br>
+			</ol>
+		 </fieldset>
+		</p>
+		<form action="" method="POST">
+		    <label for="projectName"> Название проекта</label>
+		    <select name="projectName" id="projectName"> 
+				<option value="project1"> Проект 1</option>
+				<option value="project2"> Проект 2</option>
+				<option value="project3"> Проект 3</option>
+				<option value="project4"> Проект 4</option>
+				<option value="project5"> Проект 5</option>
+			</select><br>
+			<label for="userName"> Имя </label><input type="text" name="userName" id="userName" placeholder="Введите имя" > <br>
+			<label for="userSurname"> Фамилия </label><input type="text" name="userSurname"  id="userSurname" placeholder="Введите Фамилию" > <br>
+			<label for="userEmail"> Email </label><input type="email" name="userEmail" id="userEmail" placeholder="Введите email"> <br>
+			<label for="userPost"> Должность </label>
+			<select name="userPost" id="userPost" required > 
+				<option value="project1"> Менеджер </option>
+				<option value="project2"> Руководитель отдела </option>
+				<option value="project3"> Руководитель проекта </option>
+				<option value="project4"> Программист </option>
+				<option value="project5"> Аналитик </option>
+			</select><br>
+			<p> Отзыв о состоянии дел в области разработки: </p><textarea name="developmentOpinion" id="developmentOpinion" cols="80" rows="10" maxlength="4096" placeholder="Место для отзыва" spellcheck="true"></textarea><br>
+			<p> Отзыв о состоянии дел в области тестирования: </p><textarea name="testingOpinion" id="testingOpinion" cols="80" rows="10" maxlength="4096" placeholder="Место для отзыва" spellcheck="true"></textarea><br>
+			<p> Отзыв о состоянии дел в области анализа: </p><textarea name="analysisOpinion" id="analysisOpinion" cols="80" rows="10" maxlength="4096" placeholder="Место для отзыва" spellcheck="true"></textarea><br>
+			<p> Отзыв о состоянии дел на проекте в целом: </p><textarea name="projectOpinion" id="projectOpinion" cols="80" rows="10" maxlength="4096" placeholder="Место для отзыва" spellcheck="true"></textarea><br>
+			<input type="submit" value="Отправить отзыв">
+			<input type="reset" value="Очистить анкету">
+        </form>		
+	</body>
+</html>
