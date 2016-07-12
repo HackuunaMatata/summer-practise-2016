@@ -1,4 +1,4 @@
-package dbEntities;
+package Responses.dbEntities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
