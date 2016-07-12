@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - tabletest@localhost" uuid="f1cc4788-fe1b-407c-b6a6-a86a529f1d38">
+    <database-info product="MySQL" version="5.6.31" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <database-model serializer="dbm" rdbms="MYSQL" format-version="2.5">
+      <schema id="1" name="tabletest"/>
+      <table id="2" parent="1" name="city"/>
+      <table id="3" parent="1" name="country"/>
+      <table id="4" parent="1" name="festival"/>
+      <table id="5" parent="1" name="festivalorganizer"/>
+      <column id="6" parent="2" name="Name">
+        <mandatory>1</mandatory>
+        <data-type>varchar(40)</data-type>
+        <default-expression>&apos;&apos;</default-expression>
+      </column>
+      <column id="7" parent="2" name="Population">
+        <data-type>int(15)</data-type>
+      </column>
+      <column id="8" parent="2" name="Area">
+        <data-type>int(15)</data-type>
+      </column>
+      <column id="9" parent="2" name="Country">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <key id="10" parent="2" name="PRIMARY">
+        <columns>Name</columns>
+        <primary>1</primary>
+      </key>
+      <column id="11" parent="3" name="Name">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <column id="12" parent="3" name="Population">
+        <data-type>int(15)</data-type>
+      </column>
+      <column id="13" parent="3" name="Area">
+        <data-type>int(15)</data-type>
+      </column>
+      <column id="14" parent="3" name="Capital">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <index id="15" parent="3" name="Capital">
+        <columns>Capital</columns>
+        <desc-columns></desc-columns>
+      </index>
+      <foreign-key id="16" parent="3" name="country_ibfk_1">
+        <columns>Capital</columns>
+        <ref-key>~.city.PRIMARY</ref-key>
+        <cascade-update-rule>restrict</cascade-update-rule>
+        <cascade-delete-rule>restrict</cascade-delete-rule>
+      </foreign-key>
+      <column id="17" parent="4" name="Name">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <column id="18" parent="4" name="City">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <column id="19" parent="4" name="Places">
+        <data-type>int(15)</data-type>
+      </column>
+      <column id="20" parent="4" name="Country">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <column id="21" parent="4" name="Organizer">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <column id="22" parent="5" name="Name">
+        <data-type>varchar(40)</data-type>
+      </column>
+      <column id="23" parent="5" name="AccreditationCountry">
+        <data-type>int(15)</data-type>
+      </column>
+    </database-model>
+  </data-source>
+</component>
