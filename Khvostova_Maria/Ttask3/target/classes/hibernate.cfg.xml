@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!--<property name="connection.username">root</property>-->
+    <property name="hbm2ddl.auto">update</property>
+    <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/javastudy</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="connection.username">root</property>
+    <mapping resource="jpa/HobbyEntity.hbm.xml"/>
+    <mapping class="hibernate.factory.HobbyEntity"/>
+    <mapping resource="jpa/ContactEntity.hbm.xml"/>
+    <mapping class="hibernate.factory.ContactEntity"/>
+    <mapping resource="jpa/ContactHobbyDetailEntity.hbm.xml"/>
+    <mapping class="hibernate.factory.ContactHobbyDetailEntity"/>
+    <mapping resource="jpa/ContactTelDetailEntity.hbm.xml"/>
+    <mapping class="hibernate.factory.ContactTelDetailEntity"/>
+    <mapping resource="jpa/ContactEntity.hbm.xml"/>
+    <mapping resource="jpa/ContactHobbyDetailEntity.hbm.xml"/>
+    <mapping resource="jpa/ContactTelDetailEntity.hbm.xml"/>
+    <mapping resource="jpa/HobbyEntity.hbm.xml"/>
+
+    <!-- NOTE that after automapping with IDEA property username and password will delete -->
+    <!--and will be:  Initial SessionFactory failedorg.hibernate.service.spi.ServiceException: Unable to create requested service-->
+
+
+    <!-- NOTE that after automapping with IDEA property username and password will delete -->
+
+    <!-- DB schema will be updated if needed -->
+
+  </session-factory>
+</hibernate-configuration>
