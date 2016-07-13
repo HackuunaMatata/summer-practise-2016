@@ -4,16 +4,16 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "questions", schema = "database", catalog = "")
+@Table(name = "Questions", schema = "Responses", catalog = "")
 public class QuestionsEntity {
     private int id;
     private String value;
-    private Boolean isRequired;
-    private Boolean isActive;
+    private Byte isRequired;
+    private Byte isActive;
     private Collection<FormsEntity> formsesById;
 
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -23,7 +23,7 @@ public class QuestionsEntity {
     }
 
     @Basic
-    @Column(name = "Value", nullable = true, length = 1024)
+    @Column(name = "Value")
     public String getValue() {
         return value;
     }
@@ -33,22 +33,22 @@ public class QuestionsEntity {
     }
 
     @Basic
-    @Column(name = "isRequired", nullable = true)
-    public Boolean getIsRequired() {
+    @Column(name = "isRequired")
+    public Byte getIsRequired() {
         return isRequired;
     }
 
-    public void setIsRequired(Boolean isRequired) {
+    public void setIsRequired(Byte isRequired) {
         this.isRequired = isRequired;
     }
 
     @Basic
-    @Column(name = "isActive", nullable = true)
-    public Boolean getIsActive() {
+    @Column(name = "isActive")
+    public Byte getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Boolean isActive) {
+    public void setIsActive(Byte isActive) {
         this.isActive = isActive;
     }
 

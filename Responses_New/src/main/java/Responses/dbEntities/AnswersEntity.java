@@ -4,14 +4,14 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Table(name = "answers", schema = "database", catalog = "")
+@Table(name = "Answers", schema = "Responses", catalog = "")
 public class AnswersEntity {
     private int id;
     private String value;
     private Collection<FormsEntity> formsesById;
 
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -21,7 +21,7 @@ public class AnswersEntity {
     }
 
     @Basic
-    @Column(name = "Value", nullable = true, length = 4096)
+    @Column(name = "Value")
     public String getValue() {
         return value;
     }

@@ -6,12 +6,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "admin", schema = "database", catalog = "")
+@Table(name = "Admin", schema = "Responses", catalog = "")
 public class AdminEntity {
     private String eMail;
 
     @Id
-    @Column(name = "EMail", nullable = false, length = 256)
+    @Column(name = "EMail")
     public String geteMail() {
         return eMail;
     }
