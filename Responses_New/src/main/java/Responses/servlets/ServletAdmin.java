@@ -26,10 +26,10 @@ public class ServletAdmin extends HttpServlet {
         out.println("<h2>Настройка парамеров:</h2>");
         out.println("<ol>");
         out.println("<li>");
-        out.println("<a href=\"admin_form_questionaries.html\">Редактирование анкеты </a><br>"); // вставить название сервлета
+        out.println("<a href=\"ServletAdminFormQuestionaries\">Редактирование анкеты </a><br>");
         out.println("</li>");
         out.println("<li>");
-        out.println("<a href=\"admin_form_addQuestions.html\">Добавить вопросы в анкету</a><br>");// вставить название сервлета
+        out.println("<a href=\"ServletAdminAddQuestions\">Добавить вопросы в анкету</a><br>");
         out.println("</li>");
         out.println("<li>");
         out.println("<a href=\"admin_form_getData.html\">Получить данные в doc файле</a><br>");// вставить название сервлета
