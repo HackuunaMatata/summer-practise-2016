@@ -12,6 +12,12 @@ CREATE TABLE Answers (
 	PRIMARY KEY (ID)
 );
 
+CREATE TABLE DefaultAnswers (
+	QuestionID INT,
+	Value VARCHAR(1024),
+	PRIMARY KEY (QuestionID, Value)
+);
+
 # Таблица анкет, хранит номера всех ответов и всех вопросов
 CREATE TABLE Forms (
 	ID INT,

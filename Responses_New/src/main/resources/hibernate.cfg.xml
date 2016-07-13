@@ -5,15 +5,14 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/database</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/Responses</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.username">root</property>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
         <mapping class="Responses.dbEntities.AdminEntity"/>
         <mapping class="Responses.dbEntities.AnswersEntity"/>
         <mapping class="Responses.dbEntities.FormsEntity"/>
         <mapping class="Responses.dbEntities.QuestionsEntity"/>
-
+        <mapping class="Responses.dbEntities.DefaultAnswersEntity"/>
     </session-factory>
 </hibernate-configuration>
