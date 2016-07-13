@@ -23,6 +23,7 @@ CREATE TABLE Forms (
 	ID INT,
 	QuestionID INT,
 	AnswerID INT,
+	DateSent DATETIME,
 	PRIMARY KEY (ID, QuestionID),
 	FOREIGN KEY (QuestionID) REFERENCES Questions(ID),
 	FOREIGN KEY (AnswerID) REFERENCES Answers(ID)

@@ -1,19 +1,18 @@
 package Responses.dbEntities;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
-@Table(name = "forms", schema = "database", catalog = "")
+@Table(name = "Forms", schema = "Responses", catalog = "")
 @IdClass(FormsEntityPK.class)
 public class FormsEntity {
     private int id;
     private int questionId;
-    private Integer answerId;
-    private QuestionsEntity questionsByQuestionId;
-    private AnswersEntity answersByAnswerId;
+    private Date dateSent;
 
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     public int getId() {
         return id;
     }
@@ -23,7 +22,7 @@ public class FormsEntity {
     }
 
     @Id
-    @Column(name = "QuestionID", nullable = false)
+    @Column(name = "QuestionID")
     public int getQuestionId() {
         return questionId;
     }
@@ -33,13 +32,13 @@ public class FormsEntity {
     }
 
     @Basic
-    @Column(name = "AnswerID")
-    public Integer getAnswerId() {
-        return answerId;
+    @Column(name = "DateSent")
+    public Date getDateSent() {
+        return dateSent;
     }
 
-    public void setAnswerId(Integer answerId) {
-        this.answerId = answerId;
+    public void setDateSent(Date dateSent) {
+        this.dateSent = dateSent;
     }
 
     @Override
@@ -51,7 +50,7 @@ public class FormsEntity {
 
         if (id != that.id) return false;
         if (questionId != that.questionId) return false;
-        if (answerId != null ? !answerId.equals(that.answerId) : that.answerId != null) return false;
+        if (dateSent != null ? !dateSent.equals(that.dateSent) : that.dateSent != null) return false;
 
         return true;
     }
@@ -60,27 +59,7 @@ public class FormsEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + questionId;
-        result = 31 * result + (answerId != null ? answerId.hashCode() : 0);
+        result = 31 * result + (dateSent != null ? dateSent.hashCode() : 0);
         return result;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "QuestionID", referencedColumnName = "ID", nullable = false,  insertable = false, updatable = false)
-    public QuestionsEntity getQuestionsByQuestionId() {
-        return questionsByQuestionId;
-    }
-
-    public void setQuestionsByQuestionId(QuestionsEntity questionsByQuestionId) {
-        this.questionsByQuestionId = questionsByQuestionId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "AnswerID", referencedColumnName = "ID",  insertable = false, updatable = false)
-    public AnswersEntity getAnswersByAnswerId() {
-        return answersByAnswerId;
-    }
-
-    public void setAnswersByAnswerId(AnswersEntity answersByAnswerId) {
-        this.answersByAnswerId = answersByAnswerId;
     }
 }

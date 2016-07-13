@@ -8,7 +8,7 @@ public class FormsEntityPK implements Serializable {
     private int id;
     private int questionId;
 
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID")
     @Id
     public int getId() {
         return id;
@@ -18,7 +18,7 @@ public class FormsEntityPK implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "QuestionID", nullable = false)
+    @Column(name = "QuestionID")
     @Id
     public int getQuestionId() {
         return questionId;
