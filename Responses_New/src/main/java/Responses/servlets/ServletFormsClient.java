@@ -103,6 +103,12 @@ public class ServletFormsClient extends javax.servlet.http.HttpServlet {
         DefaultAnswersDao answersDao = new DefaultAnswersDao();
         List<DefaultAnswersEntity> answers = answersDao.getAnswers();
 
+        int countQwID_0 = 0;
+        while (answers.get(countQwID_0).getQuestionId() == 0) {
+            countQwID_0++;
+        }
+        int countQwID_4 = answers.size() - countQwID_0;
+
 
         for (int i = 0; i < questions.size(); i++) {
             if (questions.get(i).getIsActive() == true) {
@@ -118,50 +124,51 @@ public class ServletFormsClient extends javax.servlet.http.HttpServlet {
                 if ((i == 0) || (i == 4)) {
                     out.println("<select name=\"" + questions.get(i).getId() + "\" id=\"" +
                             questions.get(i).getId() + "\"> ");
-                    if (i == 4) {
-                        out.println("<option value=\"\">  </option>");
-                    }
-                    for (int j = 0; j < 5; j++) {
-                        if (i == 0) {
+                    if (i == 0) {
+                        for (int j = 0; j < countQwID_0; j++) {
                             out.println("<option value=\"" + String.valueOf(j + i) +
                                     "\">" + answers.get(j + i).getValue() + "</option>");
-                        } else {
-                            out.println("<option value=\"" + String.valueOf(j + i + 1) +
-                                    "\">" + answers.get(j + i + 1).getValue() + "</option>");
+                        }
+                    } else {
+                        out.println("<option value=\"\">  </option>");
+                        for (int j = 0; j < countQwID_4; j++) {
+                            out.println("<option value=\"" + String.valueOf(j + countQwID_0) +
+                                    "\">" + answers.get(j + countQwID_0).getValue() + "</option>");
                         }
                     }
-                    out.println("</select><br>");
-                } else if ((i > 4) && (i < 9)) {
-                    out.println("<p>" + questions.get(i).getValue() + ": </p><textarea name=\"" +
-                            questions.get(i).getId() + "\" id=\"" + questions.get(i).getId() +
-                            "\" cols=\"80\" rows=\"10\" maxlength=\"4096\" placeholder=\"Место для отзыва\" spellcheck=\"true\"></textarea><br>");
-                } else {
-                    out.println("<label for=\"" + questions.get(i).getId() + "\">" +
-                            questions.get(i).getValue() + "</label><input type=\"text\" name=\"" +
-                            questions.get(i).getId() + "\" id=\"" + questions.get(i).getId() +
-                            "\" placeholder=\"" + questions.get(i).getValue() + "\" ");
-                    if(questions.get(i).getIsRequired() == true){
-                        out.println(" required ");
-                    }
-                    out.println("> <br>");
+                out.println("</select><br>");
+            } else if ((i > 4) && (i < 9)) {
+                out.println("<p>" + questions.get(i).getValue() + ": </p><textarea name=\"" +
+                        questions.get(i).getId() + "\" id=\"" + questions.get(i).getId() +
+                        "\" cols=\"80\" rows=\"10\" maxlength=\"4096\" placeholder=\"Место для отзыва\" spellcheck=\"true\"></textarea><br>");
+            } else {
+                out.println("<label for=\"" + questions.get(i).getId() + "\">" +
+                        questions.get(i).getValue() + "</label><input type=\"text\" name=\"" +
+                        questions.get(i).getId() + "\" id=\"" + questions.get(i).getId() +
+                        "\" placeholder=\"" + questions.get(i).getValue() + "\" ");
+                if (questions.get(i).getIsRequired() == true) {
+                    out.println(" required ");
                 }
-                out.println("<script>");
-                out.println("function empty_form () {");
-                out.println("var txt1 = document.getElementById('5').value;");
-                out.println("var txt2 = document.getElementById('6').value;");
-                out.println("var txt3 = document.getElementById('7').value;");
-                out.println("var txt4 = document.getElementById('8').value;");
-                out.println(" if((txt1 == '')&&(txt2 == '')&&(txt3 == '')&&(txt4 == '')){");
-                out.println("alert('Напишите хотя бы один отзыв!');");
-                out.println("return false;}");
-                out.println("return true;}");
-                out.println("</script>");
+                out.println("> <br>");
             }
+            out.println("<script>");
+            out.println("function empty_form () {");
+            out.println("var txt1 = document.getElementById('5').value;");
+            out.println("var txt2 = document.getElementById('6').value;");
+            out.println("var txt3 = document.getElementById('7').value;");
+            out.println("var txt4 = document.getElementById('8').value;");
+            out.println(" if((txt1 == '')&&(txt2 == '')&&(txt3 == '')&&(txt4 == '')){");
+            out.println("alert('Напишите хотя бы один отзыв!');");
+            out.println("return false;}");
+            out.println("return true;}");
+            out.println("</script>");
         }
-        out.println("<input type=\"submit\" value=\"Отправить отзыв\">");
-        // out.println("<input type=\"reset\" value=\"Очистить анкету\">");
-        out.println("</form>");
-        out.println("</body>");
-        out.println("</html>");
     }
+
+    out.println("<input type=\"submit\" value=\"Отправить отзыв\">");
+    // out.println("<input type=\"reset\" value=\"Очистить анкету\">");
+    out.println("</form>");
+    out.println("</body>");
+    out.println("</html>");
+}
 }

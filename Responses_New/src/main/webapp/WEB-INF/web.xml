@@ -12,6 +12,30 @@
     <servlet-name>ServletAdmin</servlet-name>
     <servlet-class>Responses.servlets.ServletAdmin</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ServletAdminAddQuestions</servlet-name>
+    <servlet-class>Responses.servlets.ServletAdminAddQuestions</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ServletAdminFormQuestionaries</servlet-name>
+    <servlet-class>Responses.servlets.ServletAdminFormQuestionaries</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ServletAdminFormGetData</servlet-name>
+    <servlet-class>Responses.servlets.ServletAdminFormGetData</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ServletAdminFormMail</servlet-name>
+    <servlet-class>Responses.servlets.ServletAdminFormMail</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ServletAdminAddProject</servlet-name>
+    <servlet-class>Responses.servlets.ServletAdminAddProject</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ServletAdminAddPosition</servlet-name>
+    <servlet-class>Responses.servlets.ServletAdminAddPosition</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>ServletFormsClient</servlet-name>
@@ -21,5 +45,35 @@
   <servlet-mapping>
     <servlet-name>ServletAdmin</servlet-name>
     <url-pattern>/ServletAdmin</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ServletAdminAddQuestions</servlet-name>
+    <url-pattern>/ServletAdminAddQuestions</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ServletAdminFormQuestionaries</servlet-name>
+    <url-pattern>/ServletAdminFormQuestionaries</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ServletAdminFormGetData</servlet-name>
+    <url-pattern>/ServletAdminFormGetData</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ServletAdminFormMail</servlet-name>
+    <url-pattern>/ServletAdminFormMail</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ServletAdminAddProject</servlet-name>
+    <url-pattern>/ServletAdminAddProject</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ServletAdminAddPosition</servlet-name>
+    <url-pattern>/ServletAdminAddPosition</url-pattern>
   </servlet-mapping>
 </web-app>

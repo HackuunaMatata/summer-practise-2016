@@ -1,11 +1,15 @@
 package Responses.servlets;
 
+import Responses.dao.DefaultAnswersDao;
+import Responses.dbEntities.DefaultAnswersEntity;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class ServletAdminFormGetData extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -19,15 +23,15 @@ public class ServletAdminFormGetData extends HttpServlet {
         out.println("<html>");
         out.println("<head>");
         out.println("<meta charset=\"utf-8\">");
-        out.println(" <title>HTML Document</title>");
+        out.println(" <title>Получение данных</title>");
         out.println("</head>");
-        out.println("<body>");
+        out.println("<body onLoad=\"a()\">");
         out.println("<h1>Страница администратора</h1><br>");
         out.println("<h2> Получение данных </h2><br>");
         out.println("<form action=\"\">");
-        out.println("<input type=\"radio\" name=\"data\" id=\"allData\">");
+        out.println("<input type=\"radio\" name=\"data\" id=\"allData\" onChange=\"a()\">");
         out.println("<label for=\"data\"> Получить все данные </label><br><br>");
-        out.println("<input type=\"radio\" name=\"data\" id=\"getData\">");
+        out.println("<input type=\"radio\" name=\"data\" id=\"getData\" onChange=\"a()\">");
         out.println("<label for=\"data\"> Получить данные по параметру:  </label><br><br>");
         out.println("<script>");
         out.println("function a() {");
@@ -44,20 +48,23 @@ public class ServletAdminFormGetData extends HttpServlet {
         out.println("<input type=\"checkbox\" name=\"projectNameBox\" id=\"projectNameBox\" onClick=\"a()\" >");
         out.println("<label for=\"projectName\"> Проект </label>");
         out.println("<select name=\"projectName\" id=\"projectName\"> ");
-        out.println("<option value=\"project1\"> Проект 1</option>");
-        out.println("<option value=\"project2\"> Проект 2</option>");
-        out.println("<option value=\"project3\"> Проект 3</option>");
-        out.println("<option value=\"project4\"> Проект 4</option>");
-        out.println("<option value=\"project5\"> Проект 5</option>");
+        DefaultAnswersDao answersDao = new DefaultAnswersDao();
+        List<DefaultAnswersEntity> answers = answersDao.getAnswers();
+        int id = answers.get(0).getQuestionId();
+        int j = 0;
+        while(id == answers.get(j).getQuestionId()){
+            out.println("<option value=\"" + String.valueOf(j) + "\">" + answers.get(j).getValue() + " </option>");
+            j++;
+        }
         out.println("</select><br>");
         out.println("<input type=\"checkbox\" name=\"userPostBox\" id=\"userPostBox\" onClick=\"a()\">");
         out.println("<label for=\"userPost\"> Должность </label>");
         out.println("<select name=\"userPost\" id=\"userPost\"  > ");
-        out.println("<option value=\"project1\"> Менеджер </option>");
-        out.println("<option value=\"project2\"> Руководитель отдела </option>");
-        out.println("<option value=\"project3\"> Руководитель проекта </option>");
-        out.println("<option value=\"project4\"> Программист </option>");
-        out.println("<option value=\"project5\"> Аналитик </option>");
+        id = answers.get(j).getQuestionId();
+        while(id == answers.get(j).getQuestionId()){
+            out.println("<option value=\"" + String.valueOf(j) + "\">" + answers.get(j).getValue() + " </option>");
+            j++;
+        }
         out.println("</select><br><br>");
         out.println("<input type=\"submit\" value=\"Получить\">");
         out.println("</form>");

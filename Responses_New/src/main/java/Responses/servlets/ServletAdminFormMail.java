@@ -20,7 +20,7 @@ public class ServletAdminFormMail extends HttpServlet {
         out.println("<html>");
         out.println("<head>");
         out.println("<meta charset=\"utf-8\">");
-        out.println(" <title>HTML Document</title>");
+        out.println(" <title>Настройки отправки на email</title>");
         out.println("</head>");
         out.println("<body>");
         out.println("<h1>Страница администратора</h1><br>");

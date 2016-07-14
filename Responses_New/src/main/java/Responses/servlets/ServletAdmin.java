@@ -19,7 +19,7 @@ public class ServletAdmin extends HttpServlet {
         out.println("<html>");
         out.println("<head>");
         out.println("<meta charset=\"utf-8\">");
-        out.println(" <title>HTML Document</title>");
+        out.println(" <title>Настройки параметров</title>");
         out.println("</head>");
         out.println("<body>");
         out.println("<h1>Страница администратора</h1>");
@@ -32,10 +32,16 @@ public class ServletAdmin extends HttpServlet {
         out.println("<a href=\"ServletAdminAddQuestions\">Добавить вопросы в анкету</a><br>");
         out.println("</li>");
         out.println("<li>");
-        out.println("<a href=\"admin_form_getData.html\">Получить данные в doc файле</a><br>");// вставить название сервлета
+        out.println("<a href=\"ServletAdminAddProject\">Добавить проект</a><br>");
         out.println("</li>");
         out.println("<li>");
-        out.println("<a href=\"admin_form_mail.html\"> Настройка уведомлений на e-mail </a><br>");// вставить название сервлета
+        out.println("<a href=\"ServletAdminAddPosition\">Добавить должность</a><br>");
+        out.println("</li>");
+        out.println("<li>");
+        out.println("<a href=\"ServletAdminFormGetData\">Получить данные в doc файле</a><br>");
+        out.println("</li>");
+        out.println("<li>");
+        out.println("<a href=\"ServletAdminFormMail\"> Настройка уведомлений на e-mail </a><br>");// вставить название сервлета
         out.println("</li>");
         out.println("</ol>");
         out.println("<a href=\"ServletFormsClient\">Вернуться к анкете</a>");
