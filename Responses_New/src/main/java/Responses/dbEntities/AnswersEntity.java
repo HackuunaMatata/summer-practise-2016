@@ -3,6 +3,9 @@ package Responses.dbEntities;
 import javax.persistence.*;
 import java.util.Collection;
 
+/**
+ * Created by venedikttsulenev on 14/07/16.
+ */
 @Entity
 @Table(name = "Answers", schema = "Responses", catalog = "")
 public class AnswersEntity {

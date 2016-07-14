@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Created by venedikttsulenev on 14/07/16.
+ */
 @Entity
 @Table(name = "Admin", schema = "Responses", catalog = "")
 public class AdminEntity {

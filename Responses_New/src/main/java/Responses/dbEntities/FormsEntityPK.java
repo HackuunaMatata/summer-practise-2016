@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+/**
+ * Created by venedikttsulenev on 14/07/16.
+ */
 public class FormsEntityPK implements Serializable {
     private int id;
     private int questionId;

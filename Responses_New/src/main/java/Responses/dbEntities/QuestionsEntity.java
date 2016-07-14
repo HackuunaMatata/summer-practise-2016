@@ -1,16 +1,14 @@
 package Responses.dbEntities;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Table(name = "Questions", schema = "Responses", catalog = "")
 public class QuestionsEntity {
     private int id;
     private String value;
-    private Byte isRequired;
-    private Byte isActive;
-    private Collection<FormsEntity> formsesById;
+    private boolean isRequired;
+    private boolean isActive;
 
     @Id
     @Column(name = "ID")
@@ -34,22 +32,22 @@ public class QuestionsEntity {
 
     @Basic
     @Column(name = "isRequired")
-    public Byte getIsRequired() {
+    public boolean getIsRequired() {
         return isRequired;
     }
 
-    public void setIsRequired(Byte isRequired) {
-        this.isRequired = isRequired;
+    public void setIsRequired(boolean required) {
+        isRequired = required;
     }
 
     @Basic
     @Column(name = "isActive")
-    public Byte getIsActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(Byte isActive) {
-        this.isActive = isActive;
+    public void setIsActive(boolean active) {
+        isActive = active;
     }
 
     @Override
@@ -60,9 +58,9 @@ public class QuestionsEntity {
         QuestionsEntity that = (QuestionsEntity) o;
 
         if (id != that.id) return false;
+        if (isRequired != that.isRequired) return false;
+        if (isActive != that.isActive) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
-        if (isRequired != null ? !isRequired.equals(that.isRequired) : that.isRequired != null) return false;
-        if (isActive != null ? !isActive.equals(that.isActive) : that.isActive != null) return false;
 
         return true;
     }
@@ -71,17 +69,8 @@ public class QuestionsEntity {
     public int hashCode() {
         int result = id;
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (isRequired != null ? isRequired.hashCode() : 0);
-        result = 31 * result + (isActive != null ? isActive.hashCode() : 0);
+        result = 31 * result + (isRequired ? 1 : 0);
+        result = 31 * result + (isActive ? 1 : 0);
         return result;
-    }
-
-    @OneToMany(mappedBy = "questionsByQuestionId")
-    public Collection<FormsEntity> getFormsesById() {
-        return formsesById;
-    }
-
-    public void setFormsesById(Collection<FormsEntity> formsesById) {
-        this.formsesById = formsesById;
     }
 }

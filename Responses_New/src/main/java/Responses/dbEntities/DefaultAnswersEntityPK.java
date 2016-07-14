@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+/**
+ * Created by venedikttsulenev on 14/07/16.
+ */
 public class DefaultAnswersEntityPK implements Serializable {
     private int questionId;
     private String value;
