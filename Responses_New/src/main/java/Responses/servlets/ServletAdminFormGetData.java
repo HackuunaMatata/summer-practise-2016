@@ -2,6 +2,7 @@ package Responses.servlets;
 
 import Responses.dao.DefaultAnswersDao;
 import Responses.dbEntities.DefaultAnswersEntity;
+import Responses.utils.DocxWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +14,21 @@ import java.util.List;
 
 public class ServletAdminFormGetData extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String project = null, post = null;
+        String path = getServletContext().getRealPath("/") + "temp.docx";
+        if ("on".equals(request.getParameter("data"))) {
+            if ("on".equals(request.getParameter("projectNameBox")))
+                project = request.getParameter("projectName");
+            if ("on".equals(request.getParameter("userPostBox")))
+                post = request.getParameter("userPost");
+        }
+        if (project == null && post == null)
+            DocxWriter.WriteForms("path");
+        else
+            DocxWriter.WriteFormsByProjectAndPost(path, project, post);
+//        response.setContentType("text/html;charset=UTF-8");
+//        response.getWriter().println("<html><body>" + request.getContextPath() + "/temp.docx</body></html>");
+        response.sendRedirect(request.getContextPath() + "/temp.docx");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +43,7 @@ public class ServletAdminFormGetData extends HttpServlet {
         out.println("<body onLoad=\"a()\">");
         out.println("<h1>Страница администратора</h1><br>");
         out.println("<h2> Получение данных </h2><br>");
-        out.println("<form action=\"\">");
+        out.println("<form action=\"\" method=\"post\">");
         out.println("<input type=\"radio\" name=\"data\" id=\"allData\" onChange=\"a()\">");
         out.println("<label for=\"data\"> Получить все данные </label><br><br>");
         out.println("<input type=\"radio\" name=\"data\" id=\"getData\" onChange=\"a()\">");
@@ -60,6 +75,7 @@ public class ServletAdminFormGetData extends HttpServlet {
         out.println("<input type=\"checkbox\" name=\"userPostBox\" id=\"userPostBox\" onClick=\"a()\">");
         out.println("<label for=\"userPost\"> Должность </label>");
         out.println("<select name=\"userPost\" id=\"userPost\"  > ");
+        j = 0;
         id = answers.get(j).getQuestionId();
         while(id == answers.get(j).getQuestionId()){
             out.println("<option value=\"" + String.valueOf(j) + "\">" + answers.get(j).getValue() + " </option>");
