@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Вид формы</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            function getHTTPObject() {
+  		if (window.ActiveXObject) return newActiveXObject("Microsoft.XMLHTTP");
+  		else if (window.XMLHttpRequest) return new XMLHttpRequest;
+                    else {
+                        alert("AJAX is not supproted"); 
+                        return null;
+                    }
+
+            }
+            function makeCheck() {
+                var get = location.search;  // строка GET запроса    
+                if(get != '')    
+                {    
+                    var tmp = get.substr(1);   // разделяем переменные    
+
+                    var tmp2 = tmp.split('=');       
+                    var param = tmp2[1].split('-');       
+
+                    document.getElementById('event').value=param[0];
+                    
+                    document.getElementById('eventTitle').value=param[1];
+                    
+                    httpObject = getHTTPObject();
+
+                    if (httpObject == null) return;
+                    httpObject.open("GET","AllItemServlet?event="+param[0],true);
+                    httpObject.send(null);
+                    httpObject.onreadystatechange = setCheck;
+                
+                }
+            }
+            function setCheck(){
+               
+  		if (httpObject.readyState == 4) {
+                    var params = httpObject.responseText;
+                    var questions = JSON.parse(params);
+                   
+                    for(var i = 0; i < questions.length; i++){
+                        addCheck("items[]",questions[i].itemname);
+                        document.getElementById('forcheck').appendChild(document.createElement("p"));
+                    }
+                    
+  		}
+            }
+            function addCheck (name,id)
+            {
+                var oOption = document.createElement("input");
+                oOption.type = "checkbox";
+                oOption.checked = "true";
+                oOption.name = name;
+                oOption.id = id;
+                oOption.setAttribute("value", id);
+                
+                var label = document.createElement('label');
+                label.htmlFor = "id";
+                label.appendChild(document.createTextNode(id));
+
+                document.getElementById('forcheck').appendChild(oOption);
+                document.getElementById('forcheck').appendChild(label);
+                document.getElementById('forcheck').appendChild(document.createTextNode("\r"));
+            }
+            function addevent(){
+                location.href = "addevent.html";
+            }
+            function resetFile(){
+                document.getElementById("image").value = null;
+            }
+            function requestToAdd(){
+                location.href = "additem.html?events="+document.getElementById('event').value+"-"+
+                        document.getElementById('eventTitle').value;
+            }
+            
+            function requestToEdit(){
+                if (document.getElementById(document.getElementById("edit").value)){
+                    location.href = "edititem.html?event="+
+                            document.getElementById("event").value+"-"+document.getElementById('eventTitle').value+
+                            "&itemname="+
+                            document.getElementById("edit").value;
+                }
+            }
+            
+            function deleteEvent(){
+                if (confirm("Удалить?")) {
+                    httpObject = getHTTPObject();
+
+                    if (httpObject == null) return;
+                    httpObject.open("GET","DeleteEventServlet?event="+document.getElementById('event').value,true);
+                    httpObject.send(null);
+                    httpObject.onreadystatechange = resFromDel;
+                } 
+            }
+            function editName(){ 
+                location.href="editname.html?eventTitle="+document.getElementById('eventTitle').value;
+            }
+            function resFromDel(){
+                if (httpObject.readyState == 4) {
+                    alert(httpObject.responseText);
+                    location.href = "change.html";
+                }
+            }
+            function cancel(){
+                location.href = "change.html";
+            }
+        </script>
+    </head>
+    <body>
+        <form id='form' action="FormChangedServlet" method="POST" enctype="multipart/form-data">
+            <fieldset>
+                <legend>Мероприятие</legend>
+                <p>ID мероприятия <input type="text" name="event" id="event" readonly></p>
+                <p>
+                    Название <input type="text" name="eventTitle" id="eventTitle" readonly>
+                    <input type="button" value="Сменить название" onclick="editName()">
+                </p>
+                <p>Чтобы поменять картинку, просто выберите новую, при не выбранном файле картинка
+                останется предыдущей
+                </p>
+                Банер <input type="file" name="image" id="image" accept="image/jpeg,image/png">
+                <input type="button" value="Сброс выбора" onclick="resetFile()">
+            </fieldset>
+            <fieldset id="forcheck" name="forcheck">
+                <legend>Пункты</legend>
+                <script>
+                    makeCheck();
+                </script>
+            </fieldset>
+            <fieldset>
+                <legend>Панель управления</legend>
+                <p>
+                    Введите название желаемого пункта <br>
+                    <input type="text" name="edit" id="edit">
+                    <input type="button" value="Редактировать пункт" onclick="requestToEdit()">
+                </p>
+                <p>
+                    <input type="button" value="Добавить пункт" onclick="requestToAdd()">
+                </p>
+                <p>
+                    <input type="submit">
+                    <input type="button" value="Удалить мероприятие" onclick="deleteEvent()">
+                    <input type="button" value="Отмена" onclick="cancel()">
+                </p>                
+            </fieldset>
+        </form>
+    </body>
+</html>

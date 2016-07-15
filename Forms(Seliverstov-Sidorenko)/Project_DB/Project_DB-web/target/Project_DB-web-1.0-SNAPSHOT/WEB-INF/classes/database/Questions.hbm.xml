@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15.07.2016 9:53:11 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="database.Questions" table="questions" catalog="practice_project" optimistic-lock="version">
+        <id name="iditem" type="java.lang.Integer">
+            <column name="iditem" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="events" class="database.Events" fetch="select">
+            <column name="idevent" />
+        </many-to-one>
+        <property name="itemname" type="string">
+            <column name="itemname" length="64" />
+        </property>
+        <property name="tag" type="string">
+            <column name="tag" length="8" />
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="8" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" length="64" />
+        </property>
+        <property name="isActive" type="java.lang.Boolean">
+            <column name="isActive" />
+        </property>
+        <set name="blobses" table="blobs" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iditem" not-null="true" />
+            </key>
+            <one-to-many class="database.Blobs" />
+        </set>
+        <set name="numberses" table="numbers" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iditem" not-null="true" />
+            </key>
+            <one-to-many class="database.Numbers" />
+        </set>
+        <set name="stringses" table="strings" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iditem" not-null="true" />
+            </key>
+            <one-to-many class="database.Strings" />
+        </set>
+        <set name="answerses" table="answers" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iditem" not-null="true" />
+            </key>
+            <one-to-many class="database.Answers" />
+        </set>
+        <set name="dateses" table="dates" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iditem" not-null="true" />
+            </key>
+            <one-to-many class="database.Dates" />
+        </set>
+    </class>
+</hibernate-mapping>

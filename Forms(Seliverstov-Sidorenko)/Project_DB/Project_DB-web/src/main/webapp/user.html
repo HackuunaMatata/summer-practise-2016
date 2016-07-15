@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="PageLogic.js"></script>
+    </head>
+    <body onload="LoadEvents()">
+        <div>
+            <img id="logo" src="">
+        </div>
+        <div align="center">
+            <form id="form" method="POST" action="Servlet" enctype="multipart/form-data">
+                <fieldset style="width: 50%" id="field">
+                    <legend align="center">Форма для заполнения</legend>
+                    <table id="table"></table>
+                </fieldset>
+                <input type="submit" value="Отправить">
+            </form>
+        </div>
+    </body>
+</html>

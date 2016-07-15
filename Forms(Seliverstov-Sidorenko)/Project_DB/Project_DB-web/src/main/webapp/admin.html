@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Администратор</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            function choice(){
+                value = document.getElementById('select').value;
+                location.href = value+".html";
+            }
+        </script>
+    </head>
+    <body>
+        <fieldset>
+            <legend><b>Администратор</b></legend>
+            <form>
+                <p>
+                    Выбор действия: 
+                    <select name="select" id="select">
+                        <option value="change">Изменить форму участника</option>
+                        <option value="upload">Выгрузка в .xls</option>
+                        <option value="message">Настройки уведомлений</option>
+                    </select> 
+                </p>
+                <input type="button" value="Ok" onclick="choice()">
+            </form>
+        </fieldset>
+    </body>
+</html>

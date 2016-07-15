@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Добавить мероприятие</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function threeSymCont() {
+                var usr = document.getElementById("title").value;
+                if (usr.length < 3) {
+                    document.getElementById("submit").disabled = true;
+                    return;
+                }
+                document.getElementById("submit").disabled = false;
+                return;
+            }
+            function forreset() {
+                document.getElementById("submit").disabled = true;
+            }
+        </script>
+    </head>
+    <body>
+        <fieldset>
+            <legend><b>Добавить мероприятие</b></legend>
+            <form action="AddEventServlet" method="POST" enctype="multipart/form-data" onreset="forreset()">
+            <p>
+                Введите название:
+                <input type="text" size="40" name="title" id="title" onkeyup="threeSymCont()">
+            </p>
+            <p>
+                Выберите картинку:<br>
+                <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
+                <input type="file" name="image" id="image" accept="image/jpeg,image/png">
+            </p>
+            <input type="submit" id="submit" disabled>
+            <input type="reset" value="Сброс">
+            <p>
+                <a href="change.html"><-Обратно</a>
+            </p>
+            </form>
+
+        </fieldset>
+
+    </body>
+</html>

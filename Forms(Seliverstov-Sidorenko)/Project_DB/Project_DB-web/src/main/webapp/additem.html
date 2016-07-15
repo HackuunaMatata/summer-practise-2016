@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Вид формы</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            function needAnswer(){
+                if (document.getElementById('select').value == 'select!null' ||
+                        document.getElementById('select').value == 'input!checkbox' ||
+                        document.getElementById('select').value == 'input!radio'){
+                    document.getElementById("answer").disabled=false;
+                    document.getElementById("ok").disabled=false;
+                    document.getElementById("forcheck").disabled=false;
+                }
+                else {
+                    document.getElementById("answer").disabled=true;
+                    document.getElementById("ok").disabled=true;
+                    document.getElementById("forcheck").disabled=true;
+                }
+            }
+            function getHTTPObject() {
+  		if (window.ActiveXObject) return newActiveXObject("Microsoft.XMLHTTP");
+  		else if (window.XMLHttpRequest) return new XMLHttpRequest;
+                    else {
+                        alert("AJAX is not supproted"); 
+                        return null;
+                    }
+
+            }
+            function makeCheck() {
+                var get = location.search;  // строка GET запроса    
+                if(get != '')    
+                {    
+                    var tmp = get.substr(1);   // разделяем переменные    
+
+                    var tmp2 = tmp.split('=');       
+                    var param = tmp2[1].split("-");       
+                    
+                    document.getElementById('event').value=param[0];
+                    document.getElementById("eventTitle").value=param[1];
+                }
+            }
+            function addCheck (name,id)
+            {
+                var oOption = document.createElement("input");
+                oOption.type = "checkbox";
+                oOption.checked = "true";
+                oOption.name = name;
+                oOption.id = id;
+                oOption.setAttribute("value", id);
+                
+                var label = document.createElement('label');
+                label.htmlFor = "id";
+                label.appendChild(document.createTextNode(id));
+
+                document.getElementById('forcheck').appendChild(oOption);
+                document.getElementById('forcheck').appendChild(label);
+            }
+            function addAnswer(){
+                var answer = document.getElementById("answer").value;
+                if (answer != ''){
+                    addCheck("answers[]",answer);
+                    document.getElementById('forcheck').appendChild(document.createElement("p"));
+                }
+                document.getElementById('answer').value='';
+            }
+            function cancel(){
+                location.href = "formview.html?events="+document.getElementById('event').value+"-"+document.getElementById("eventTitle").value;
+            }
+        </script>
+    </head>
+    <body>
+        <form id='form' action="AddItemServlet" method="POST">
+            <fieldset>
+                <legend>Пункт</legend>
+                <p>ID мероприятия <input type="text" name="event" id="event" readonly></p>
+                <p>Название мероприятия<input type="text" name="eventTitle" id="eventTitle" disabled></p>
+                <p>Название (Латиницей) <input type="text" name="item" id="item"></p>
+                <p>Описание <input type="text" name="desc" id="desc"></p>
+                <p>
+                    Выбор типа: 
+                    <select name="select" id="select" onchange="needAnswer()">
+                        <option value="input!text" selected>text</option>
+                        <option value="select!null">select</option>
+                        <option value="input!checkbox">checkbox</option>
+                        <option value="input!file">file</option>
+                        <option value="input!radio">radio</option>
+                        <option value="input!tel">tel</option>
+                        <option value="input!number">number</option>
+                        <option value="input!date">date</option>
+                        <option value="textarea!null">textarea</option>
+
+                    </select> 
+                </p>
+            </fieldset>
+            <fieldset id="forcheck" name="forcheck">
+                <legend>Ответы</legend>
+                <p>Добавляйте варианты ответов, около ненужных просто снимите check</p>
+                <p>
+                    <input type="text" name="answer" id="answer" disabled>
+                    <input type="button" value="Add" id="ok" onclick="addAnswer()" disabled>
+                </p>
+                <script>
+                    makeCheck();
+                </script>
+            </fieldset>
+            <fieldset>
+                <legend>Панель управления</legend>
+                <p>
+                    <input type="submit">
+                    <input type="button" value="Отмена" onclick="cancel()">
+                </p>                
+            </fieldset>
+        </form>
+    </body>
+</html>

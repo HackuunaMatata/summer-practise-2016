@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Добавить мероприятие</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function threeSymTitle() {
+                var usr = document.getElementById("title").value;
+                if (usr.length < 3) {
+                    document.getElementById("submit").disabled = true;
+                    return;
+                }
+                document.getElementById("submit").disabled = false;
+                return;
+            }
+            function fill(){
+                var get = location.search;  // строка GET запроса    
+                if(get != '')    
+                { 
+                    var tmp = get.substr(1);   // разделяем переменные    
+
+                    var tmp2 = tmp.split('=');       
+                    var param = tmp2[1];       
+
+                    document.getElementById('oldtitle').value=param;
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <fieldset>
+            <legend><b>Добавить мероприятие</b></legend>
+            <form action="RenameServlet">
+            <p>
+                Старое название:
+                <input type="text" size="40" name="oldtitle" id="oldtitle" readonly>
+            </p>
+            <p>
+                Введите название:
+                <input type="text" size="40" name="title" id="title" onkeyup="threeSymTitle()">
+                <script>fill()</script>
+            </p>
+            <input type="submit" id="submit" disabled>
+            <p>
+                <a href="formview.html"><-Обратно</a>
+            </p>
+            </form>
+
+        </fieldset>
+
+    </body>
+</html>

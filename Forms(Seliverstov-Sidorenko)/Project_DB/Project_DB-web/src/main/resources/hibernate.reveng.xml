@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="practice_project"/>
+  <table-filter match-name="blobs"/>
+  <table-filter match-name="answers"/>
+  <table-filter match-name="numbers"/>
+  <table-filter match-name="users"/>
+  <table-filter match-name="questions"/>
+  <table-filter match-name="dates"/>
+  <table-filter match-name="events"/>
+  <table-filter match-name="strings"/>
+</hibernate-reverse-engineering>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15.07.2016 9:53:11 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="database.Blobs" table="blobs" catalog="practice_project" optimistic-lock="version">
+        <composite-id name="id" class="database.BlobsId">
+            <key-property name="iduser" type="int">
+                <column name="iduser" />
+            </key-property>
+            <key-property name="iditem" type="int">
+                <column name="iditem" />
+            </key-property>
+            <key-property name="idevent" type="int">
+                <column name="idevent" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="questions" class="database.Questions" update="false" insert="false" fetch="select">
+            <column name="iditem" not-null="true" />
+        </many-to-one>
+        <many-to-one name="users" class="database.Users" update="false" insert="false" fetch="select">
+            <column name="iduser" not-null="true" />
+            <column name="idevent" not-null="true" />
+        </many-to-one>
+        <property name="value" type="binary">
+            <column name="value" />
+        </property>
+    </class>
+</hibernate-mapping>
