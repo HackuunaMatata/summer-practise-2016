@@ -23,11 +23,11 @@ public class ServletAdminFormGetData extends HttpServlet {
                 post = request.getParameter("userPost");
         }
         if (project == null && post == null)
-            DocxWriter.WriteForms("path");
+            DocxWriter.WriteForms(path);
         else
             DocxWriter.WriteFormsByProjectAndPost(path, project, post);
 //        response.setContentType("text/html;charset=UTF-8");
-//        response.getWriter().println("<html><body>" + request.getContextPath() + "/temp.docx</body></html>");
+//        response.getWriter().println("<html><body>" + path + "</body></html>");
         response.sendRedirect(request.getContextPath() + "/temp.docx");
     }
 
@@ -67,7 +67,7 @@ public class ServletAdminFormGetData extends HttpServlet {
         List<DefaultAnswersEntity> answers = answersDao.getAnswers();
         int id = answers.get(0).getQuestionId();
         int j = 0;
-        while(id == answers.get(j).getQuestionId()){
+        while(j < answers.size() && id == answers.get(j).getQuestionId()){
             out.println("<option value=\"" + String.valueOf(j) + "\">" + answers.get(j).getValue() + " </option>");
             j++;
         }
@@ -75,9 +75,8 @@ public class ServletAdminFormGetData extends HttpServlet {
         out.println("<input type=\"checkbox\" name=\"userPostBox\" id=\"userPostBox\" onClick=\"a()\">");
         out.println("<label for=\"userPost\"> Должность </label>");
         out.println("<select name=\"userPost\" id=\"userPost\"  > ");
-        j = 0;
         id = answers.get(j).getQuestionId();
-        while(id == answers.get(j).getQuestionId()){
+        while(j < answers.size() && id == answers.get(j).getQuestionId()){
             out.println("<option value=\"" + String.valueOf(j) + "\">" + answers.get(j).getValue() + " </option>");
             j++;
         }

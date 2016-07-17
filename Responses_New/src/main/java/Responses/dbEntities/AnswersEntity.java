@@ -1,7 +1,6 @@
 package Responses.dbEntities;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Created by venedikttsulenev on 14/07/16.
@@ -11,7 +10,6 @@ import java.util.Collection;
 public class AnswersEntity {
     private int id;
     private String value;
-    private Collection<FormsEntity> formsesById;
 
     @Id
     @Column(name = "ID")
@@ -51,14 +49,5 @@ public class AnswersEntity {
         int result = id;
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
-    }
-
-    @OneToMany(mappedBy = "answersByAnswerId")
-    public Collection<FormsEntity> getFormsesById() {
-        return formsesById;
-    }
-
-    public void setFormsesById(Collection<FormsEntity> formsesById) {
-        this.formsesById = formsesById;
     }
 }

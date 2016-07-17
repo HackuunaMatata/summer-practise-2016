@@ -14,8 +14,6 @@ public class FormsEntity {
     private int questionId;
     private Integer answerId;
     private Date dateSent;
-    private QuestionsEntity questionsByQuestionId;
-    private AnswersEntity answersByAnswerId;
 
     @Id
     @Column(name = "ID")
@@ -38,7 +36,7 @@ public class FormsEntity {
     }
 
     @Basic
-    @Column(name = "AnswerID")
+    @Column(name = "AnswerID", insertable = false, updatable = false)
     public Integer getAnswerId() {
         return answerId;
     }
@@ -79,25 +77,5 @@ public class FormsEntity {
         result = 31 * result + (answerId != null ? answerId.hashCode() : 0);
         result = 31 * result + (dateSent != null ? dateSent.hashCode() : 0);
         return result;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "QuestionID", referencedColumnName = "ID", nullable = false)
-    public QuestionsEntity getQuestionsByQuestionId() {
-        return questionsByQuestionId;
-    }
-
-    public void setQuestionsByQuestionId(QuestionsEntity questionsByQuestionId) {
-        this.questionsByQuestionId = questionsByQuestionId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "AnswerID", referencedColumnName = "ID")
-    public AnswersEntity getAnswersByAnswerId() {
-        return answersByAnswerId;
-    }
-
-    public void setAnswersByAnswerId(AnswersEntity answersByAnswerId) {
-        this.answersByAnswerId = answersByAnswerId;
     }
 }
