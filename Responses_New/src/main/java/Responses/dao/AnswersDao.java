@@ -28,7 +28,7 @@ public class AnswersDao {
     public AnswersEntity getAnswerById(Integer answerId) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(AnswersEntity.class);
-        criteria.add(Restrictions.eq("answerId", answerId));
+        criteria.add(Restrictions.eq("id", answerId));
         AnswersEntity answer = (AnswersEntity) criteria.uniqueResult();
         session.close();
         return answer;

@@ -29,7 +29,7 @@ public class FormsDao {
     public FormsEntity getFormById(Integer formId) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(FormsEntity.class);
-        criteria.add(Restrictions.eq("formId", formId));
+        criteria.add(Restrictions.eq("id", formId));
         FormsEntity form = (FormsEntity) criteria.uniqueResult();
         session.close();
         return form;

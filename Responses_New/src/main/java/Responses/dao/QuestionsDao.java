@@ -29,7 +29,7 @@ public class QuestionsDao {
     public QuestionsEntity getQuestionById(Integer questionId) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(QuestionsEntity.class);
-        criteria.add(Restrictions.eq("questionId", questionId));
+        criteria.add(Restrictions.eq("id", questionId));
         QuestionsEntity question = (QuestionsEntity) criteria.uniqueResult();
         session.close();
         return question;

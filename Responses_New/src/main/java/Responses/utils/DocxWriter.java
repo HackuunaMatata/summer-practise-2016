@@ -5,15 +5,11 @@ import Responses.dao.FormsDao;
 import Responses.dao.QuestionsDao;
 import Responses.dbEntities.AnswersEntity;
 import Responses.dbEntities.FormsEntity;
-import Responses.dbEntities.QuestionsEntity;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.hibernate.Session;
-import sun.misc.FormattedFloatingDecimal;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,33 +112,34 @@ public class DocxWriter {
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();
 
-            int id = formIDs.get(0);
-            run.setText("Form #" + id);
-            paragraph.setIndentationHanging(200);
-            run.addBreak();
-            run.setFontSize(16);
-            run.setBold(true);
-            paragraph.addRun(run);
-            for (FormsEntity fe : forms) {
-                if (fe.getId() != id && formIDs.contains(fe.getId())) {
-                    id = fe.getId();
-                    run.setText("Form #" + id);
-                    paragraph.setIndentationHanging(200);
-                    run.addBreak();
-                    run.setFontSize(16);
-                    run.setBold(true);
-                    paragraph.addRun(run);
-                }
-                else if (fe.getId() == id) {
-                    paragraph = document.createParagraph();
-                    run = paragraph.createRun();
-                    String qa = questionsDao.getQuestionById(fe.getQuestionId()).getValue()
-                            + ": "
-                            + answersDao.getAnswerById(fe.getAnswerId()).getValue();
-                    run.setText(qa);
-                    run.setFontSize(14);
-                    run.addBreak();
-                    paragraph.addRun(run);
+            if (!formIDs.isEmpty()) {
+                int id = formIDs.get(0);
+                run.setText("Form #" + id);
+                paragraph.setIndentationHanging(200);
+                run.addBreak();
+                run.setFontSize(16);
+                run.setBold(true);
+                paragraph.addRun(run);
+                for (FormsEntity fe : forms) {
+                    if (fe.getId() != id && formIDs.contains(fe.getId())) {
+                        id = fe.getId();
+                        run.setText("Form #" + id);
+                        paragraph.setIndentationHanging(200);
+                        run.addBreak();
+                        run.setFontSize(16);
+                        run.setBold(true);
+                        paragraph.addRun(run);
+                    } else if (fe.getId() == id) {
+                        paragraph = document.createParagraph();
+                        run = paragraph.createRun();
+                        String qa = questionsDao.getQuestionById(fe.getQuestionId()).getValue()
+                                + ": "
+                                + answersDao.getAnswerById(fe.getAnswerId()).getValue();
+                        run.setText(qa);
+                        run.setFontSize(14);
+                        run.addBreak();
+                        paragraph.addRun(run);
+                    }
                 }
             }
         }

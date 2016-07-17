@@ -29,7 +29,7 @@ public class DefaultAnswersDao {
     public DefaultAnswersEntity getAnswerById(Integer answerId) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(DefaultAnswersEntity.class);
-        criteria.add(Restrictions.eq("defaultAnswerId", answerId));
+        criteria.add(Restrictions.eq("id", answerId));
         DefaultAnswersEntity answer = (DefaultAnswersEntity) criteria.uniqueResult();
         session.close();
         return answer;
