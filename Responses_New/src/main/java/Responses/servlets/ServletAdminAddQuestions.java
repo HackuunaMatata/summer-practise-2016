@@ -24,6 +24,7 @@ public class ServletAdminAddQuestions extends HttpServlet {
         QuestionsEntity questionsEntity = new QuestionsEntity();
         questionsEntity.setId(countQuestion);
         questionsEntity.setValue(request.getParameter("questionName"));
+        System.out.println(request.getParameter("questionName"));
         questionsEntity.setIsActive(true);
         questionsEntity.setIsRequired(false);
         session.save(questionsEntity);

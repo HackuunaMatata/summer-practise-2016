@@ -1,9 +1,10 @@
 package Responses.servlets;
 
-import Responses.dao.AnswersDao;
 import Responses.dao.QuestionsDao;
-import Responses.dbEntities.AnswersEntity;
 import Responses.dbEntities.QuestionsEntity;
+import Responses.utils.HibernateSessionFactory;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,15 +19,26 @@ public class ServletAdminFormQuestionaries extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         QuestionsDao questionsDao = new QuestionsDao();
         List<QuestionsEntity> questions = questionsDao.getQuestions();
+        PrintWriter out = response.getWriter();
         for(int i = 0; i < questions.size(); i++){
-            if(request.getParameter(String.valueOf(questions.get(i).getId()) + "Active") == "checked"){
-                questions.get(i).setIsActive(true);
+            Session session = HibernateSessionFactory.getSessionFactory().openSession();
+            Transaction tx = session.beginTransaction();
+            QuestionsEntity ques = (QuestionsEntity) session.load(QuestionsEntity.class, i);
+            tx.commit();
+            ques.setId(questions.get(i).getId());
+            ques.setValue(questions.get(i).getValue());
+            ques.setIsRequired(questions.get(i).getIsRequired());
+            Transaction tx7 = session.beginTransaction();
+            String active = request.getParameter(String.valueOf(questions.get(i).getId()) + "Active");
+            if("on".equals(active)){
+                ques.setIsActive(true);
             }
             else{
-                questions.get(i).setIsActive(false);
+                ques.setIsActive(false);
             }
+            session.update(ques);
+            tx7.commit();
         }
-        PrintWriter out = response.getWriter();
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
