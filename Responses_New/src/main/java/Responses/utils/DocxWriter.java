@@ -25,11 +25,8 @@ public class DocxWriter {
         XWPFDocument document = new XWPFDocument();
 
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        FormsDao formsDao = new FormsDao();
-        AnswersDao answersDao = new AnswersDao();
-        QuestionsDao questionsDao = new QuestionsDao();
 
-        List<FormsEntity> forms = formsDao.getForms();
+        List<FormsEntity> forms = FormsDao.getForms();
         Collections.sort(forms, new Comparator<FormsEntity>() {
             public int compare(FormsEntity o1, FormsEntity o2) {
                 int idDiff = o1.getId() - o2.getId();
@@ -63,9 +60,9 @@ public class DocxWriter {
                 }
                 paragraph = document.createParagraph();
                 run = paragraph.createRun();
-                String qa = questionsDao.getQuestionById(fe.getQuestionId()).getValue()
+                String qa = QuestionsDao.getQuestionById(fe.getQuestionId()).getValue()
                         + ": "
-                        + answersDao.getAnswerById(fe.getAnswerId()).getValue();
+                        + AnswersDao.getAnswerById(fe.getAnswerId()).getValue();
                 run.setText(qa);
                 run.setFontSize(14);
                 run.addBreak();
@@ -76,31 +73,27 @@ public class DocxWriter {
         document.write(new FileOutputStream(filePath));
     }
 
-    static final int projectQuestionID = 0, postQuestionID = 4;
+    static private final int projectQuestionID = 0, postQuestionID = 4;
     public static void WriteFormsByProjectAndPost(String filePath, int projectNum, int postNum) throws IOException {
         XWPFDocument document = new XWPFDocument();
 
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        FormsDao formsDao = new FormsDao();
-        AnswersDao answersDao = new AnswersDao();
-        QuestionsDao questionsDao = new QuestionsDao();
-        DefaultAnswersDao defaultAnswersDao = new DefaultAnswersDao();
 
-        String project = projectNum == -1 ? null : defaultAnswersDao.getAnswers().get(projectNum).getValue();
-        String post = postNum == - 1 ? null : defaultAnswersDao.getAnswers().get(postNum).getValue();
+        String project = projectNum == -1 ? null : DefaultAnswersDao.getAnswers().get(projectNum).getValue();
+        String post = postNum == - 1 ? null : DefaultAnswersDao.getAnswers().get(postNum).getValue();
 
-        List<AnswersEntity> answers = answersDao.getAnswers();
+        List<AnswersEntity> answers = AnswersDao.getAnswers();
         if (!answers.isEmpty()) {
             ArrayList<Integer> projectIds = project == null ? null : new ArrayList<Integer>(answers.size() / 2);
             ArrayList<Integer> postIds = post == null ? null : new ArrayList<Integer>(answers.size() / 2);
-            for (AnswersEntity ae : answersDao.getAnswers()) {
+            for (AnswersEntity ae : AnswersDao.getAnswers()) {
                 if (ae.getValue().equals(project))
                     projectIds.add(ae.getId());
                 if (ae.getValue().equals(post))
                     postIds.add(ae.getId());
             }
 
-            List<FormsEntity> forms = formsDao.getForms();
+            List<FormsEntity> forms = FormsDao.getForms();
             Collections.sort(forms, new Comparator<FormsEntity>() {
                 public int compare(FormsEntity o1, FormsEntity o2) {
                     int idDiff = o1.getId() - o2.getId();
@@ -139,9 +132,9 @@ public class DocxWriter {
                     } else if (fe.getId() == id) {
                         paragraph = document.createParagraph();
                         run = paragraph.createRun();
-                        String qa = questionsDao.getQuestionById(fe.getQuestionId()).getValue()
+                        String qa = QuestionsDao.getQuestionById(fe.getQuestionId()).getValue()
                                 + ": "
-                                + answersDao.getAnswerById(fe.getAnswerId()).getValue();
+                                + AnswersDao.getAnswerById(fe.getAnswerId()).getValue();
                         run.setText(qa);
                         run.setFontSize(14);
                         run.addBreak();

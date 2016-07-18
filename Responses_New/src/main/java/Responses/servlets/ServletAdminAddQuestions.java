@@ -16,8 +16,7 @@ import java.util.List;
 public class ServletAdminAddQuestions extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        QuestionsDao questionsDao = new QuestionsDao();
-        List<QuestionsEntity> questions = questionsDao.getQuestions();
+        List<QuestionsEntity> questions = QuestionsDao.getQuestions();
         int countQuestion = questions.size();
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         session.beginTransaction();

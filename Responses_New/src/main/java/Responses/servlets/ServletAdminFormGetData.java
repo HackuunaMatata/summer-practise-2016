@@ -24,6 +24,7 @@ public class ServletAdminFormGetData extends HttpServlet {
             }
             if ("on".equals(request.getParameter("userPostBox"))) {
                 post = Integer.parseInt(request.getParameter("userPost"));
+                name += '_';
                 name += post;
             }
         }
@@ -68,8 +69,7 @@ public class ServletAdminFormGetData extends HttpServlet {
         out.println("<input type=\"checkbox\" name=\"projectNameBox\" id=\"projectNameBox\" onClick=\"a()\" >");
         out.println("<label for=\"projectName\"> Проект </label>");
         out.println("<select name=\"projectName\" id=\"projectName\"> ");
-        DefaultAnswersDao answersDao = new DefaultAnswersDao();
-        List<DefaultAnswersEntity> answers = answersDao.getAnswers();
+        List<DefaultAnswersEntity> answers = DefaultAnswersDao.getAnswers();
         int id = answers.get(0).getQuestionId();
         int j = 0;
         while(j < answers.size() && id == answers.get(j).getQuestionId()){

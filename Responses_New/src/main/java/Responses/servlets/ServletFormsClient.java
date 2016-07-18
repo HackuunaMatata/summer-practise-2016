@@ -22,16 +22,13 @@ public class ServletFormsClient extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         Date date = new Date();
-        FormsDao formsDao = new FormsDao();
-        List<FormsEntity> forms = formsDao.getForms();
-        DefaultAnswersDao defaultAnswersDao = new DefaultAnswersDao();
-        List<DefaultAnswersEntity> defAnswers = defaultAnswersDao.getAnswers();
+        List<FormsEntity> forms = FormsDao.getForms();
+        List<DefaultAnswersEntity> defAnswers = DefaultAnswersDao.getAnswers();
         int newId = 0;
         if (forms.size() != 0) {
-            newId = Integer.valueOf(forms.get(forms.size() - 1).getId()) + 1;
+            newId = forms.get(forms.size() - 1).getId() + 1;
         }
-        QuestionsDao questionsDao = new QuestionsDao();
-        List<QuestionsEntity> questions = questionsDao.getQuestions();
+        List<QuestionsEntity> questions = QuestionsDao.getQuestions();
         for (int i = 0; i < questions.size(); i++) {
             if (questions.get(i).getIsActive() == true) {
                 Session session = HibernateSessionFactory.getSessionFactory().openSession();
@@ -42,8 +39,7 @@ public class ServletFormsClient extends HttpServlet {
                 formsEntity.setQuestionId(i);
                 formsEntity.setDateSent(date);
 
-                AnswersDao answersDao = new AnswersDao();
-                List<AnswersEntity> answers = answersDao.getAnswers();
+                List<AnswersEntity> answers = AnswersDao.getAnswers();
                 Integer answerId = answers.size();
                 String answer = request.getParameter(String.valueOf(questions.get(i).getId()));
 
@@ -67,7 +63,7 @@ public class ServletFormsClient extends HttpServlet {
 
         // Отправка на email - не работает
         AdminDao adminDao = new AdminDao();
-        List<AdminEntity> admins = adminDao.getAdmin();
+        List<AdminEntity> admins = AdminDao.getAdmin();
         if (admins.size() != 0){
             String to = admins.get(0).geteMail();
             System.out.println(to);
@@ -132,11 +128,8 @@ public class ServletFormsClient extends HttpServlet {
         out.println("<ol>");
 
 
-        QuestionsDao questionsDao = new QuestionsDao();
-        List<QuestionsEntity> questions = questionsDao.getQuestions();
-
-        DefaultAnswersDao answersDao = new DefaultAnswersDao();
-        List<DefaultAnswersEntity> answers = answersDao.getAnswers();
+        List<QuestionsEntity> questions = QuestionsDao.getQuestions();
+        List<DefaultAnswersEntity> answers = DefaultAnswersDao.getAnswers();
 
         int countQwID_0 = 0;
         while (answers.get(countQwID_0).getQuestionId() == 0) {
