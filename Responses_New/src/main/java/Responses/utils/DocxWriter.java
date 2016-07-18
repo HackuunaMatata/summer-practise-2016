@@ -107,11 +107,17 @@ public class DocxWriter {
                     if (fe.getQuestionId() == projectQuestionID && projectIds.contains(fe.getAnswerId()))
                         formIDs.add(fe.getId());
                 }
+                if (postIds != null) {
+                    for (FormsEntity fe : forms) {
+                        if (fe.getQuestionId() == postQuestionID && !postIds.contains(fe.getAnswerId()))
+                            formIDs.remove(new Integer(fe.getId()));
+                    }
+                }
             }
-            if (postIds != null) {
+            else {
                 for (FormsEntity fe : forms) {
-                    if (fe.getQuestionId() == postQuestionID && !postIds.contains(fe.getAnswerId()))
-                        formIDs.remove(new Integer(fe.getId()));
+                    if (fe.getQuestionId() == postQuestionID && postIds.contains(fe.getAnswerId()))
+                        formIDs.add(fe.getId());
                 }
             }
 
