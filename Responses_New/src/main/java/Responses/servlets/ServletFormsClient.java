@@ -1,16 +1,12 @@
 package Responses.servlets;
 
-import Responses.dao.AnswersDao;
-import Responses.dao.DefaultAnswersDao;
-import Responses.dao.FormsDao;
-import Responses.dao.QuestionsDao;
-import Responses.dbEntities.AnswersEntity;
-import Responses.dbEntities.DefaultAnswersEntity;
-import Responses.dbEntities.FormsEntity;
-import Responses.dbEntities.QuestionsEntity;
+import Responses.dao.*;
+import Responses.dbEntities.*;
 import Responses.utils.HibernateSessionFactory;
 import org.hibernate.Session;
 
+import javax.mail.*;
+import javax.mail.internet.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 public class ServletFormsClient extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,7 +47,7 @@ public class ServletFormsClient extends HttpServlet {
                 Integer answerId = answers.size();
                 String answer = request.getParameter(String.valueOf(questions.get(i).getId()));
 
-                if (answer != "" && answer != null) {
+                if (answer.length() != 0 && answer != null) {
                     AnswersEntity answerEntity = new AnswersEntity();
                     answerEntity.setId(answerId);
                     if ((i != 0) && (i != 4)) {
@@ -66,6 +63,43 @@ public class ServletFormsClient extends HttpServlet {
                 session.getTransaction().commit();
                 session.close();
             }
+        }
+
+        // Отправка на email - не работает
+        AdminDao adminDao = new AdminDao();
+        List<AdminEntity> admins = adminDao.getAdmin();
+        if (admins.size() != 0){
+            String to = admins.get(0).geteMail();
+            System.out.println(to);
+            String from = "testowaya.p@yandex.ru";
+            Properties properties = new Properties();
+                    //System.getProperties();
+            properties.put("mail.smtp.host", "smtp.yandex.ru");
+            properties.put("mail.smtp.socketFactory.port", 465);
+            properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.port", 465);
+            javax.mail.Session session = javax.mail.Session.getDefaultInstance(properties,
+
+                    new javax.mail.Authenticator(){
+
+                        protected PasswordAuthentication getPasswordAuthentication(){
+                            return new PasswordAuthentication("testowaya.p@yandex.ru", "12345pochta");
+                        }
+                    }
+            );
+            try{
+                MimeMessage message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(from));
+                message.addRecipient(Message.RecipientType.TO,
+                        new InternetAddress(to));
+                message.setSubject("Новый отзыв");
+                message.setText("Вы получили новый отзыв");
+                Transport.send(message);
+            }catch (MessagingException mex) {
+                mex.printStackTrace();
+            }
+
         }
         out.println("<!DOCTYPE html>");
         out.println("<html>");

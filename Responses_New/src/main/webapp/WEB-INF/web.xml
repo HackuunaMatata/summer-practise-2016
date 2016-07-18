@@ -76,4 +76,5 @@
     <servlet-name>ServletAdminAddPosition</servlet-name>
     <url-pattern>/ServletAdminAddPosition</url-pattern>
   </servlet-mapping>
+
 </web-app>
