@@ -14,21 +14,26 @@ import java.util.List;
 
 public class ServletAdminFormGetData extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String project = null, post = null;
-        String path = getServletContext().getRealPath("/") + "temp.docx";
+        int project = -1, post = -1;
+        String name = "Forms";
         if ("on".equals(request.getParameter("data"))) {
-            if ("on".equals(request.getParameter("projectNameBox")))
-                project = request.getParameter("projectName");
-            if ("on".equals(request.getParameter("userPostBox")))
-                post = request.getParameter("userPost");
+            if ("on".equals(request.getParameter("projectNameBox"))) {
+                System.out.println();
+                project = Integer.parseInt(request.getParameter("projectName"));
+                name += project;
+            }
+            if ("on".equals(request.getParameter("userPostBox"))) {
+                post = Integer.parseInt(request.getParameter("userPost"));
+                name += post;
+            }
         }
-        if (project == null && post == null)
+        name += ".docx";
+        String path = getServletContext().getRealPath("/") + name;
+        if (project == -1 && post == -1)
             DocxWriter.WriteForms(path);
         else
             DocxWriter.WriteFormsByProjectAndPost(path, project, post);
-//        response.setContentType("text/html;charset=UTF-8");
-//        response.getWriter().println("<html><body>" + path + "</body></html>");
-        response.sendRedirect(request.getContextPath() + "/temp.docx");
+        response.sendRedirect(request.getContextPath() + name);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

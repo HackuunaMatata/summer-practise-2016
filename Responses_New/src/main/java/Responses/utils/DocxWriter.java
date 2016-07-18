@@ -1,9 +1,11 @@
 package Responses.utils;
 
 import Responses.dao.AnswersDao;
+import Responses.dao.DefaultAnswersDao;
 import Responses.dao.FormsDao;
 import Responses.dao.QuestionsDao;
 import Responses.dbEntities.AnswersEntity;
+import Responses.dbEntities.DefaultAnswersEntity;
 import Responses.dbEntities.FormsEntity;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -75,13 +77,17 @@ public class DocxWriter {
     }
 
     static final int projectQuestionID = 0, postQuestionID = 4;
-    public static void WriteFormsByProjectAndPost(String filePath, String project, String post) throws IOException {
+    public static void WriteFormsByProjectAndPost(String filePath, int projectNum, int postNum) throws IOException {
         XWPFDocument document = new XWPFDocument();
 
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         FormsDao formsDao = new FormsDao();
         AnswersDao answersDao = new AnswersDao();
         QuestionsDao questionsDao = new QuestionsDao();
+        DefaultAnswersDao defaultAnswersDao = new DefaultAnswersDao();
+
+        String project = projectNum == -1 ? null : defaultAnswersDao.getAnswers().get(projectNum).getValue();
+        String post = postNum == - 1 ? null : defaultAnswersDao.getAnswers().get(postNum).getValue();
 
         List<AnswersEntity> answers = answersDao.getAnswers();
         if (!answers.isEmpty()) {
@@ -103,23 +109,24 @@ public class DocxWriter {
             });
 
             ArrayList<Integer> formIDs = new ArrayList<Integer>(forms.size());
-            for (FormsEntity fe : forms) {
-                if (fe.getQuestionId() == projectQuestionID && projectIds != null && projectIds.contains(fe.getAnswerId())
-                        || fe.getQuestionId() == postQuestionID && postIds != null && postIds.contains(fe.getAnswerId()))
-                    formIDs.add(fe.getId());
+            if (projectIds != null) {
+                for (FormsEntity fe : forms) {
+                    if (fe.getQuestionId() == projectQuestionID && projectIds.contains(fe.getAnswerId()))
+                        formIDs.add(fe.getId());
+                }
+            }
+            if (postIds != null) {
+                for (FormsEntity fe : forms) {
+                    if (fe.getQuestionId() == postQuestionID && !postIds.contains(fe.getAnswerId()))
+                        formIDs.remove(new Integer(fe.getId()));
+                }
             }
 
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();
 
             if (!formIDs.isEmpty()) {
-                int id = formIDs.get(0);
-                run.setText("Form #" + id);
-                paragraph.setIndentationHanging(200);
-                run.addBreak();
-                run.setFontSize(16);
-                run.setBold(true);
-                paragraph.addRun(run);
+                int id = -1;
                 for (FormsEntity fe : forms) {
                     if (fe.getId() != id && formIDs.contains(fe.getId())) {
                         id = fe.getId();
