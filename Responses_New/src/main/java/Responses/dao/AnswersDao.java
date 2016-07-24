@@ -4,9 +4,7 @@ import Responses.dbEntities.AnswersEntity;
 import Responses.utils.HibernateSessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,10 +12,10 @@ import java.util.List;
 @Repository
 public class AnswersDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+//    @Autowired
+//    private SessionFactory sessionFactory;
 
-    public List<AnswersEntity> getAnswers() {
+    public static List<AnswersEntity> getAnswers() {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(AnswersEntity.class);
         List<AnswersEntity> answers = criteria.list();
@@ -25,7 +23,7 @@ public class AnswersDao {
         return answers;
     }
 
-    public AnswersEntity getAnswerById(Integer answerId) {
+    public static AnswersEntity getAnswerById(Integer answerId) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(AnswersEntity.class);
         criteria.add(Restrictions.eq("id", answerId));
@@ -34,11 +32,11 @@ public class AnswersDao {
         return answer;
     }
 
-    public void deleteAnswer(Integer answerId) {
-        Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        AnswersEntity answer = new AnswersEntity();
-        answer.setId(answerId);
-        session.delete(answer);
-        session.getTransaction().commit();
-    }
+//    public static void deleteAnswer(Integer answerId) {
+//        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+//        AnswersEntity answer = new AnswersEntity();
+//        answer.setId(answerId);
+//        session.delete(answer);
+//        session.getTransaction().commit();
+//    }
 }

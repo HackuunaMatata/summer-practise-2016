@@ -17,8 +17,7 @@ import java.util.List;
 public class ServletAdminFormQuestionaries extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        QuestionsDao questionsDao = new QuestionsDao();
-        List<QuestionsEntity> questions = questionsDao.getQuestions();
+        List<QuestionsEntity> questions = QuestionsDao.getQuestions();
         PrintWriter out = response.getWriter();
         for(int i = 0; i < questions.size(); i++){
             Session session = HibernateSessionFactory.getSessionFactory().openSession();

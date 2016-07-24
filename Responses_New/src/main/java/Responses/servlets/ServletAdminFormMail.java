@@ -21,8 +21,7 @@ public class ServletAdminFormMail extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        AdminDao adminDao = new AdminDao();
-        List<AdminEntity> admins = adminDao.getAdmin();
+        List<AdminEntity> admins = AdminDao.getAdmin();
         if (admins.size() == 0) {
             session.beginTransaction();
             AdminEntity adminNew = new AdminEntity();

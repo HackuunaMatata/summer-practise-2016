@@ -5,9 +5,7 @@ import Responses.dbEntities.QuestionsEntity;
 import Responses.utils.HibernateSessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,10 +13,10 @@ import java.util.List;
 @Repository
 public class QuestionsDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+//    @Autowired
+//    private SessionFactory sessionFactory;
 
-    public List<QuestionsEntity> getQuestions() {
+    public static List<QuestionsEntity> getQuestions() {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(QuestionsEntity.class);
         List<QuestionsEntity> questions = criteria.list();
@@ -26,7 +24,7 @@ public class QuestionsDao {
         return questions;
     }
 
-    public QuestionsEntity getQuestionById(Integer questionId) {
+    public static QuestionsEntity getQuestionById(Integer questionId) {
         Session session = HibernateSessionFactory.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(QuestionsEntity.class);
         criteria.add(Restrictions.eq("id", questionId));
@@ -34,11 +32,11 @@ public class QuestionsDao {
         session.close();
         return question;
     }
-    public void deleteQuestion(Integer answerId) {
-        Session session = HibernateSessionFactory.getSessionFactory().openSession();
-        QuestionsEntity question = new QuestionsEntity();
-        question.setId(answerId);
-        session.delete(question);
-        session.getTransaction().commit();
-    }
+//    public static void deleteQuestion(Integer answerId) {
+//        Session session = HibernateSessionFactory.getSessionFactory().openSession();
+//        QuestionsEntity question = new QuestionsEntity();
+//        question.setId(answerId);
+//        session.delete(question);
+//        session.getTransaction().commit();
+//    }
 }
