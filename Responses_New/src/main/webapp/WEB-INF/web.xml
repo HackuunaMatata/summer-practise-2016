@@ -76,5 +76,8 @@
     <servlet-name>ServletAdminAddPosition</servlet-name>
     <url-pattern>/ServletAdminAddPosition</url-pattern>
   </servlet-mapping>
-
+  <welcome-file-list>
+    <welcome-file></welcome-file>
+    <welcome-file>ServletFormsClient</welcome-file>
+  </welcome-file-list>
 </web-app>
